@@ -1,6 +1,10 @@
 const express = require("express");
 const app = express();
 const gsjson = require('google-spreadsheet-to-json');
+const bodyParser = require('body-parser');
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
 
 const HELPERS = require("./helpers");
 app.set('port', process.env.PORT || 3000);
@@ -8,8 +12,16 @@ app.set('port', process.env.PORT || 3000);
 app.get('/', function (req, res) {
    res.sendFile(__dirname + '/graph.html');
 });
-app.get('/byBrands', function (req, res) {
-    return HELPERS.byBrand(res);
+app.get('/bydist', function (req, res) {
+   res.sendFile(__dirname + '/graph-dist.html');
+});
+app.get('/byBrands/:dist?', function (req, res) {
+	let dist=req.params.dist||"";
+    return HELPERS.byBrand(res,dist);
+});
+
+app.get('/dist', function (req, res) {
+    return HELPERS.distList(res);
 });
 
 if(!module.parent){

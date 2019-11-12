@@ -11,7 +11,19 @@ const clean = (str) => {
     str = str.split(",").join("");
     str = str.split("-").join("");
     str = str.split(" ").join("");
+    str = str.split("/").join("");
     return str;
+}
+const readOrderByDist = (data) => {
+    let items = {};
+    data.forEach(function(item) {
+        let distributor = item.distributor;
+        distributor = clean(distributor)
+        if (distributor && !items[distributor]) {
+            items[distributor] = item.distributor;
+        }
+    });
+    return Object.values(items);
 }
 const readOrderByBrand = (data) => {
     let items = {};
@@ -38,7 +50,7 @@ const readOrderByBrand = (data) => {
     });
     return items;
 }
-const cleanForChart = function(items) {
+const cleanForChart = function(items, dist) {
     //console.log(items);
     let series = {
         models: {
@@ -59,20 +71,26 @@ const cleanForChart = function(items) {
         items = jsonfile.readFileSync(`./byBrands.json`);
 
     } else {
+        if (dist) {
+            let cleanedDist = clean(dist);
+            items = items.filter((item) => clean(item.distributor) === cleanedDist);
+        }
         items = readOrderByBrand(items);
     }
+
     let categories = Object.keys(items);
     let data = Object.values(items);
+
     data.forEach((item) => {
         series.models.data.push(item.models);
         series.pio.data.push(item.pianoPlayed);
         series.tm.data.push(item.dolbyLogo);
     })
-    return { categories, series: [series.models, series.pio, series.tm] };
+    return { categories, series: [series.models, series.pio, series.tm], dist: dist };
 }
 
 const HELPERS = {
-    byBrand: (res) => {
+    byBrand: (res, dist) => {
 
         gsjson({
                 spreadsheetId: '1NWNFnVyMZ10AwnwFeAirC5vQNh2MgORywAfRckUFVPw',
@@ -80,7 +98,7 @@ const HELPERS = {
             })
             .then(function(result) {
                 console.log(result.length);
-                let data = cleanForChart(result);
+                let data = cleanForChart(result, dist);
                 return res.jsonp(data);
 
             })
@@ -88,8 +106,30 @@ const HELPERS = {
                 console.log(err.message);
                 console.log(err.stack);
                 if (err) {
-                    let data = cleanForChart(null);
+                    let data = cleanForChart(null, dist);
                     return res.jsonp(data);
+                }
+
+            });
+
+    },
+    distList: (res) => {
+
+        gsjson({
+                spreadsheetId: '1NWNFnVyMZ10AwnwFeAirC5vQNh2MgORywAfRckUFVPw',
+                // other options...
+            })
+            .then(function(result) {
+                console.log(result.length);
+                let data = readOrderByDist(result);
+                return res.jsonp(data);
+
+            })
+            .catch(function(err) {
+                console.log(err.message);
+                console.log(err.stack);
+                if (err) {
+                    return res.jsonp([]);
                 }
 
             });
