@@ -1,0 +1,386 @@
+{
+  "LG": {
+    "brand": "LG",
+    "models": 37,
+    "pianoPlayed": 37,
+    "dolbyLogo": 12
+  },
+  "VU": {
+    "brand": "VU",
+    "models": 36,
+    "pianoPlayed": 26,
+    "dolbyLogo": 18
+  },
+  "TCL": {
+    "brand": "TCL",
+    "models": 70,
+    "pianoPlayed": 64,
+    "dolbyLogo": 46
+  },
+  "HITACHI": {
+    "brand": "Hitachi",
+    "models": 3,
+    "pianoPlayed": 1,
+    "dolbyLogo": 0
+  },
+  "CROMA": {
+    "brand": "Croma",
+    "models": 20,
+    "pianoPlayed": 10,
+    "dolbyLogo": 3
+  },
+  "SHARP": {
+    "brand": "SHARP",
+    "models": 33,
+    "pianoPlayed": 19,
+    "dolbyLogo": 3
+  },
+  "SONY": {
+    "brand": "SONY",
+    "models": 41,
+    "pianoPlayed": 39,
+    "dolbyLogo": 4
+  },
+  "RECONNECT": {
+    "brand": "RECONNECT",
+    "models": 21,
+    "pianoPlayed": 8,
+    "dolbyLogo": 1
+  },
+  "SAMSUNG": {
+    "brand": "SAMSUNG",
+    "models": 12,
+    "pianoPlayed": 11,
+    "dolbyLogo": 0
+  },
+  "PANASONIC": {
+    "brand": "PANASONIC",
+    "models": 36,
+    "pianoPlayed": 19,
+    "dolbyLogo": 2
+  },
+  "LLOYD": {
+    "brand": "Lloyd ",
+    "models": 24,
+    "pianoPlayed": 8,
+    "dolbyLogo": 1
+  },
+  "PANORAMA": {
+    "brand": "Panorama",
+    "models": 1,
+    "pianoPlayed": 1,
+    "dolbyLogo": 0
+  },
+  "SKYWORTH": {
+    "brand": "SKYWORTH",
+    "models": 18,
+    "pianoPlayed": 8,
+    "dolbyLogo": 0
+  },
+  "AKAI": {
+    "brand": "Akai",
+    "models": 3,
+    "pianoPlayed": 0,
+    "dolbyLogo": 0
+  },
+  "ONIDA": {
+    "brand": "ONIDA",
+    "models": 13,
+    "pianoPlayed": 3,
+    "dolbyLogo": 0
+  },
+  "CVT": {
+    "brand": "CVT",
+    "models": 1,
+    "pianoPlayed": 0,
+    "dolbyLogo": 0
+  },
+  "ADZEN": {
+    "brand": "Adzen",
+    "models": 3,
+    "pianoPlayed": 1,
+    "dolbyLogo": 0
+  },
+  "HAIER": {
+    "brand": "Haier",
+    "models": 37,
+    "pianoPlayed": 17,
+    "dolbyLogo": 1
+  },
+  "PANAROMA": {
+    "brand": "PANAROMA ",
+    "models": 5,
+    "pianoPlayed": 5,
+    "dolbyLogo": 0
+  },
+  "METZ": {
+    "brand": "METZ",
+    "models": 4,
+    "pianoPlayed": 3,
+    "dolbyLogo": 0
+  },
+  "MI(XIAOMI)": {
+    "brand": "MI (XIAOMI)",
+    "models": 3,
+    "pianoPlayed": 2,
+    "dolbyLogo": 0
+  },
+  "VISE": {
+    "brand": "Vise",
+    "models": 4,
+    "pianoPlayed": 3,
+    "dolbyLogo": 0
+  },
+  "AMSTRAD": {
+    "brand": "AMSTRAD",
+    "models": 14,
+    "pianoPlayed": 8,
+    "dolbyLogo": 0
+  },
+  "IFFALCON": {
+    "brand": "IFFALCON",
+    "models": 2,
+    "pianoPlayed": 1,
+    "dolbyLogo": 1
+  },
+  "MI": {
+    "brand": "Mi",
+    "models": 8,
+    "pianoPlayed": 2,
+    "dolbyLogo": 0
+  },
+  "RESHOKI": {
+    "brand": "Reshoki",
+    "models": 2,
+    "pianoPlayed": 0,
+    "dolbyLogo": 0
+  },
+  "TSERIES": {
+    "brand": "T-SERIES",
+    "models": 1,
+    "pianoPlayed": 1,
+    "dolbyLogo": 0
+  },
+  "SKY": {
+    "brand": "SKY",
+    "models": 2,
+    "pianoPlayed": 1,
+    "dolbyLogo": 0
+  },
+  "KORYO": {
+    "brand": "KORYO",
+    "models": 5,
+    "pianoPlayed": 5,
+    "dolbyLogo": 0
+  },
+  "MICROMAX": {
+    "brand": "Micromax",
+    "models": 13,
+    "pianoPlayed": 2,
+    "dolbyLogo": 0
+  },
+  "NVY": {
+    "brand": "NVY",
+    "models": 6,
+    "pianoPlayed": 1,
+    "dolbyLogo": 1
+  },
+  "DYANORA": {
+    "brand": "Dyanora",
+    "models": 1,
+    "pianoPlayed": 0,
+    "dolbyLogo": 1
+  },
+  "IMPEX": {
+    "brand": "Impex",
+    "models": 19,
+    "pianoPlayed": 3,
+    "dolbyLogo": 4
+  },
+  "DETEL": {
+    "brand": "Detel",
+    "models": 4,
+    "pianoPlayed": 0,
+    "dolbyLogo": 0
+  },
+  "HOMEMATE": {
+    "brand": "Homemate",
+    "models": 1,
+    "pianoPlayed": 0,
+    "dolbyLogo": 0
+  },
+  "INTEX": {
+    "brand": "Intex",
+    "models": 8,
+    "pianoPlayed": 1,
+    "dolbyLogo": 0
+  },
+  "LANZ": {
+    "brand": "Lanz",
+    "models": 2,
+    "pianoPlayed": 0,
+    "dolbyLogo": 0
+  },
+  "IBELL": {
+    "brand": "iBell",
+    "models": 2,
+    "pianoPlayed": 0,
+    "dolbyLogo": 0
+  },
+  "PHILIPS": {
+    "brand": "Philips",
+    "models": 1,
+    "pianoPlayed": 1,
+    "dolbyLogo": 1
+  },
+  "ONIX": {
+    "brand": "ONIX",
+    "models": 1,
+    "pianoPlayed": 0,
+    "dolbyLogo": 0
+  },
+  "DIOS": {
+    "brand": "Dios",
+    "models": 1,
+    "pianoPlayed": 0,
+    "dolbyLogo": 0
+  },
+  "GTEN": {
+    "brand": "G-TEN",
+    "models": 3,
+    "pianoPlayed": 0,
+    "dolbyLogo": 0
+  },
+  "JVC": {
+    "brand": "JVC",
+    "models": 2,
+    "pianoPlayed": 0,
+    "dolbyLogo": 0
+  },
+  "MITASHI": {
+    "brand": "Mitashi",
+    "models": 5,
+    "pianoPlayed": 0,
+    "dolbyLogo": 0
+  },
+  "MYTRON": {
+    "brand": "Mytron",
+    "models": 1,
+    "pianoPlayed": 0,
+    "dolbyLogo": 0
+  },
+  "SMARTLIGHT": {
+    "brand": "Smartlight",
+    "models": 3,
+    "pianoPlayed": 0,
+    "dolbyLogo": 0
+  },
+  "TELIND": {
+    "brand": "Telind",
+    "models": 1,
+    "pianoPlayed": 0,
+    "dolbyLogo": 0
+  },
+  "BLUEBERRYS": {
+    "brand": "Blueberrys",
+    "models": 1,
+    "pianoPlayed": 0,
+    "dolbyLogo": 0
+  },
+  "FOBBS": {
+    "brand": "Fobbs",
+    "models": 1,
+    "pianoPlayed": 0,
+    "dolbyLogo": 0
+  },
+  "NESTRON": {
+    "brand": "Nestron",
+    "models": 2,
+    "pianoPlayed": 0,
+    "dolbyLogo": 0
+  },
+  "NIKKO": {
+    "brand": "Nikko",
+    "models": 1,
+    "pianoPlayed": 0,
+    "dolbyLogo": 0
+  },
+  "LIFEGUARD": {
+    "brand": "Lifeguard",
+    "models": 1,
+    "pianoPlayed": 0,
+    "dolbyLogo": 0
+  },
+  "MRLIGHT": {
+    "brand": "Mr Light",
+    "models": 1,
+    "pianoPlayed": 0,
+    "dolbyLogo": 0
+  },
+  "TECHLON": {
+    "brand": "Techlon",
+    "models": 1,
+    "pianoPlayed": 0,
+    "dolbyLogo": 0
+  },
+  "AUTRIUM": {
+    "brand": "Autrium",
+    "models": 1,
+    "pianoPlayed": 0,
+    "dolbyLogo": 0
+  },
+  "BELTEK": {
+    "brand": "Beltek",
+    "models": 2,
+    "pianoPlayed": 0,
+    "dolbyLogo": 0
+  },
+  "HENRY": {
+    "brand": "HENRY",
+    "models": 8,
+    "pianoPlayed": 4,
+    "dolbyLogo": 3
+  },
+  "SANSUI": {
+    "brand": "Sansui",
+    "models": 2,
+    "pianoPlayed": 0,
+    "dolbyLogo": 0
+  },
+  "VIDEOCON": {
+    "brand": "Videocon",
+    "models": 2,
+    "pianoPlayed": 0,
+    "dolbyLogo": 0
+  },
+  "PLSDELETE": {
+    "brand": "Pls delete",
+    "models": 1,
+    "pianoPlayed": 1,
+    "dolbyLogo": 0
+  },
+  "LLYOD": {
+    "brand": "LLYOD",
+    "models": 2,
+    "pianoPlayed": 1,
+    "dolbyLogo": 0
+  },
+  "F&D": {
+    "brand": "F&D",
+    "models": 1,
+    "pianoPlayed": 0,
+    "dolbyLogo": 0
+  },
+  "VI": {
+    "brand": "VI",
+    "models": 1,
+    "pianoPlayed": 0,
+    "dolbyLogo": 1
+  },
+  "OSCAR": {
+    "brand": "Oscar",
+    "models": 1,
+    "pianoPlayed": 0,
+    "dolbyLogo": 0
+  }
+}
