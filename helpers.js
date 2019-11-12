@@ -2,6 +2,17 @@ const jsonfile = require('jsonfile');
 const gsjson = require('google-spreadsheet-to-json');
 
 //const LOCAL_HELPERS = {
+const clean = (str) => {
+    if (!str) {
+        return "";
+    }
+    str = str.toUpperCase().trim();
+    str = str.split(".").join("");
+    str = str.split(",").join("");
+    str = str.split("-").join("");
+    str = str.split(" ").join("");
+    return str;
+}
 const readOrderByBrand = (data) => {
     let items = {};
     data.forEach(function(item) {
@@ -13,7 +24,7 @@ const readOrderByBrand = (data) => {
         dolbyLogo = dolbyLogo == "NO" || !dolbyLogo.trim() ? 0 : 1;
 
         if (items[brand]) {
-            items[brand].models++;
+            ++items[brand].models;
             items[brand].pianoPlayed += pPayed;
             items[brand].dolbyLogo += dolbyLogo;
         } else {
@@ -28,6 +39,7 @@ const readOrderByBrand = (data) => {
     return items;
 }
 const cleanForChart = function(items) {
+    //console.log(items);
     let series = {
         models: {
             name: "Models",
@@ -43,6 +55,7 @@ const cleanForChart = function(items) {
         },
     };
     if (!items || items.length == 0) {
+        console.log("ppppppppppppppppppppppppppp");
         items = jsonfile.readFileSync(`./byBrands.json`);
 
     } else {
@@ -72,9 +85,13 @@ const HELPERS = {
 
             })
             .catch(function(err) {
+                console.log(err.message);
+                console.log(err.stack);
+                if (err) {
+                    let data = cleanForChart(null);
+                    return res.jsonp(data);
+                }
 
-                let data = cleanForChart(null);
-                return res.jsonp(data);
             });
 
     },
