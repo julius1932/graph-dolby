@@ -18,9 +18,12 @@ const readOrderByDist = (data) => {
     let items = {};
     data.forEach(function(item) {
         let distributor = item.distributor;
-        distributor = clean(distributor)
+        distributor = clean(distributor);
+        if (!distributor) {
+            distributor = "No distoo";
+        }
         if (distributor && !items[distributor]) {
-            items[distributor] = item.distributor;
+            items[distributor] = item.distributor || "No distributor";
         }
     });
     return Object.values(items);
@@ -43,8 +46,9 @@ const readOrderByBrand = (data, dist) => {
             items[brand].pianoPlayed += pPayed;
             items[brand].dolbyLogo += dolbyLogo;
         } else {
+            let distStr=item.distributor||"No distributor";
             items[brand] = {
-                brand: item.distributor + " : " + item.brandName,
+                brand: distStr + " : " + item.brandName,
                 models: 1,
                 pianoPlayed: pPayed,
                 dolbyLogo: dolbyLogo
@@ -78,6 +82,7 @@ const cleanForChart = function(items, dist) {
             dist = [dist];
         }
         console.log(dist);
+        dist = dist.map((curr) => curr == "No distributor" ? "" : curr);
         let cleanedDist = dist.map((curr) => clean(curr));
         //let cleanedDist = clean(dist);
         items = items.filter((item) => cleanedDist.includes(clean(item.distributor)));

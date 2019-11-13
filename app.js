@@ -23,6 +23,7 @@ app.get('/byBrands/:dist?', function (req, res) {
 app.post('/byBrands', function (req, res) {
 	let dists=req.body.dists;
 	console.log(dists);
+	
     return HELPERS.byBrand(res,dists);
 });
 app.get('/dist', function (req, res) {

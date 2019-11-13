@@ -84,6 +84,9 @@ const Adapter = {
 
 Adapter.read('/dist', function(results) {
     console.log(results);
+    if (results && Array.isArray(results)) {
+        results.sort();
+    }
     let options = "";
     results.forEach(function(dist) {
         options += `<option value="${dist}">${dist}</option>`
@@ -123,7 +126,7 @@ function showGraph(qry) {
                 type: 'bar'
             },
             title: {
-                text: 'DD India data - DO11SEP2019-881 Analysi for '
+                text: 'DD India data - DO11SEP2019-881 Analysi'
             },
             subtitle: {
                 text: 'Source: <a href="https://docs.google.com/spreadsheets/d/1NWNFnVyMZ10AwnwFeAirC5vQNh2MgORywAfRckUFVPw/edit#gid=0">Google Sheet</a>'
