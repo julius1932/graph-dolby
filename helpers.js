@@ -47,8 +47,12 @@ const readOrderByBrand = (data, dist) => {
             items[brand].dolbyLogo += dolbyLogo;
         } else {
             let distStr = item.distributor || "No distributor";
+            let brandLab = item.brandName;
+            if (dist) {
+                brandLab = distStr + " : " + item.brandName;
+            }
             items[brand] = {
-                brand: distStr + " : " + item.brandName,
+                brand: brandLab,
                 models: 1,
                 pianoPlayed: pPayed,
                 dolbyLogo: dolbyLogo
