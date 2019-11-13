@@ -53,8 +53,9 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <figure class="highcharts-figure">
     <form class="dist-from">
-        <select id="dist">
+        <select id="dist" multiple name="dists">
         </select>
+        <input type="submit" value="Submit">
     </form>
     <div id="container"></div>
     <p class="highcharts-description">
@@ -68,8 +69,19 @@ const Adapter = {
             dataType: 'jsonp',
             success: callback
         });
+    },
+    save: function(dataToSave, theUrl, cb) {
+        $.ajax({
+            url: theUrl,
+            //dataType: 'text',
+            type: 'post',
+            contentType: 'application/x-www-form-urlencoded',
+            data: dataToSave,
+            success: cb
+        });
     }
 }
+
 Adapter.read('/dist', function(results) {
     console.log(results);
     let options = "";
@@ -79,16 +91,17 @@ Adapter.read('/dist', function(results) {
     let sel = document.getElementById("dist");
     sel.innerHTML = options;
 });
-// $(".dist-from").change(function() {
-//     alert(this.value);
-// });
-$('select').on('change', function() {
-    //alert( this.value );
-    showGraph(this.value);
+
+
+$(".dist-from").submit(function(event) {
+    event.preventDefault();
+    var qry = $(this).serialize();
+    // alert(qry); 
+    showGraph(qry);
 });
 
-function showGraph(dist) {
-    Adapter.read(`/bybrands/${encodeURI(dist.split("/").join(""))}`, function(results) {
+function showGraph(qry) {
+    Adapter.save(qry, '/bybrands', function(results) {
         console.log(results);
 
         Highcharts.chart('container', {
@@ -104,7 +117,7 @@ function showGraph(dist) {
                 type: 'bar'
             },
             title: {
-                text: 'DD India data - DO11SEP2019-881 Analysi for ' + results.dist
+                text: 'DD India data - DO11SEP2019-881 Analysi for '
             },
             subtitle: {
                 text: 'Source: <a href="https://docs.google.com/spreadsheets/d/1NWNFnVyMZ10AwnwFeAirC5vQNh2MgORywAfRckUFVPw/edit#gid=0">Google Sheet</a>'
@@ -112,6 +125,7 @@ function showGraph(dist) {
             xAxis: {
                 //categories: ['Africa', 'America', 'Asia', 'Europe', 'Oceania'],
                 categories: results.categories,
+               
 
                 title: {
                     text: null
@@ -119,6 +133,7 @@ function showGraph(dist) {
             },
             yAxis: {
                 min: 0,
+                tickInterval: 1,
                 title: {
                     text: 'Number (Quantity)',
                     align: 'high'

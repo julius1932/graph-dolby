@@ -17,9 +17,14 @@ app.get('/bydist', function (req, res) {
 });
 app.get('/byBrands/:dist?', function (req, res) {
 	let dist=req.params.dist||"";
+	console.log(req.body);
     return HELPERS.byBrand(res,dist);
 });
-
+app.post('/byBrands', function (req, res) {
+	let dists=req.body.dists;
+	console.log(dists);
+    return HELPERS.byBrand(res,dists);
+});
 app.get('/dist', function (req, res) {
     return HELPERS.distList(res);
 });

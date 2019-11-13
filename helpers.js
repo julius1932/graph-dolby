@@ -25,11 +25,14 @@ const readOrderByDist = (data) => {
     });
     return Object.values(items);
 }
-const readOrderByBrand = (data) => {
+const readOrderByBrand = (data, dist) => {
     let items = {};
     data.forEach(function(item) {
         let brand = item.brandName;
         brand = clean(brand);
+        if (dist) {
+            brand += clean(item.distributor);
+        }
         let pPayed = clean(item.pianoSound) || "NO";
         pPayed = pPayed == "NO" || !pPayed.trim() ? 0 : 1;
         let dolbyLogo = clean(item.trademark) || "NO";
@@ -41,7 +44,7 @@ const readOrderByBrand = (data) => {
             items[brand].dolbyLogo += dolbyLogo;
         } else {
             items[brand] = {
-                brand: item.brandName,
+                brand: item.distributor + " : " + item.brandName,
                 models: 1,
                 pianoPlayed: pPayed,
                 dolbyLogo: dolbyLogo
@@ -72,20 +75,32 @@ const cleanForChart = function(items, dist) {
 
     } else {
         if (dist) {
-            let cleanedDist = clean(dist);
-            items = items.filter((item) => clean(item.distributor) === cleanedDist);
-        }
-        items = readOrderByBrand(items);
-    }
+            if (!Array.isArray(dist)) {
+                dist = [dist];
+            }
+            console.log(dist);
+            let cleanedDist = dist.map((curr) => clean(curr));
+            //let cleanedDist = clean(dist);
+            items = items.filter((item) => cleanedDist.includes(clean(item.distributor)));
 
+        }
+        items = readOrderByBrand(items, dist);
+    }
+    let categoriesDist = [];
     let categories = Object.keys(items);
+
     let data = Object.values(items);
+    data = data.sort((a, b) => (a.brand > b.brand) ? 1 : ((b.brand > a.brand) ? -1 : 0));
 
     data.forEach((item) => {
+        categoriesDist.push(item.brand);
         series.models.data.push(item.models);
         series.pio.data.push(item.pianoPlayed);
         series.tm.data.push(item.dolbyLogo);
     })
+    if (dist) {
+        categories = categoriesDist;
+    }
     return { categories, series: [series.models, series.pio, series.tm], dist: dist };
 }
 
