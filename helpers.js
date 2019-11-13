@@ -42,11 +42,11 @@ const readOrderByBrand = (data, dist) => {
         dolbyLogo = dolbyLogo == "NO" || !dolbyLogo.trim() ? 0 : 1;
 
         if (items[brand]) {
-            ++items[brand].models;
+            items[brand].models += 1;
             items[brand].pianoPlayed += pPayed;
             items[brand].dolbyLogo += dolbyLogo;
         } else {
-            let distStr=item.distributor||"No distributor";
+            let distStr = item.distributor || "No distributor";
             items[brand] = {
                 brand: distStr + " : " + item.brandName,
                 models: 1,
@@ -94,8 +94,9 @@ const cleanForChart = function(items, dist) {
     let categories = Object.keys(items);
 
     let data = Object.values(items);
-    data = data.sort((a, b) => (a.brand > b.brand) ? 1 : ((b.brand > a.brand) ? -1 : 0));
-
+    if (dist) {
+        data = data.sort((a, b) => (a.brand > b.brand) ? 1 : ((b.brand > a.brand) ? -1 : 0));
+    }
     data.forEach((item) => {
         categoriesDist.push(item.brand);
         series.models.data.push(item.models);
@@ -117,16 +118,18 @@ const HELPERS = {
             })
             .then(function(result) {
                 console.log(result.length);
+                jsonfile.writeFile(`result.json`, result, { spaces: 2 }, function(err) {
+                    console.error(err);
+                });
                 let data = cleanForChart(result, dist);
                 return res.jsonp(data);
-
             })
             .catch(function(err) {
                 console.log(err.message);
                 console.log(err.stack);
                 if (err) {
                     let data = cleanForChart(null, dist);
-                    return res.jsonp(data);
+                    return res.jsonp([]);
                 }
 
             });
