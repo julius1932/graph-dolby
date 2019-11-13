@@ -55,7 +55,7 @@
     <form class="dist-from">
         <select id="dist" multiple name="dists">
         </select>
-        <input type="submit" value="Submit">
+        <input type="submit" value="Show">
     </form>
     <div id="container"></div>
     <p class="highcharts-description">
@@ -103,7 +103,13 @@ $(".dist-from").submit(function(event) {
 function showGraph(qry) {
     Adapter.save(qry, '/bybrands', function(results) {
         console.log(results);
-
+        let numCate = results.categories.length;
+        let divHeight = numCate / 5 * 400;
+        if (divHeight >= 400) {
+            $('#container').css('height', divHeight + 'px');
+        } else {
+            $('#container').css('height', 'auto');
+        }
         Highcharts.chart('container', {
 
             'plotOptions': {
@@ -125,7 +131,7 @@ function showGraph(qry) {
             xAxis: {
                 //categories: ['Africa', 'America', 'Asia', 'Europe', 'Oceania'],
                 categories: results.categories,
-               
+
 
                 title: {
                     text: null

@@ -54,7 +54,6 @@
 <figure class="highcharts-figure">
     <div id="container"></div>
     <p class="highcharts-description">
-        
     </p>
 </figure>
 <script>
@@ -69,7 +68,14 @@ const Adapter = {
 }
 Adapter.read('/bybrands', function(results) {
     console.log(results);
-
+    let numCate = results.categories.length;
+    let divHeight = numCate / 5 * 400;
+    if(divHeight>=400){
+       $('#container').css('height', divHeight + 'px'); 
+    }else{
+        $('#container').css('height','auto'); 
+    }
+    
     Highcharts.chart('container', {
         'plotOptions': {
             'column': {

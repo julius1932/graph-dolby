@@ -71,21 +71,20 @@ const cleanForChart = function(items, dist) {
     };
     if (!items || items.length == 0) {
         console.log("ppppppppppppppppppppppppppp");
-        items = jsonfile.readFileSync(`./byBrands.json`);
-
-    } else {
-        if (dist) {
-            if (!Array.isArray(dist)) {
-                dist = [dist];
-            }
-            console.log(dist);
-            let cleanedDist = dist.map((curr) => clean(curr));
-            //let cleanedDist = clean(dist);
-            items = items.filter((item) => cleanedDist.includes(clean(item.distributor)));
-
-        }
-        items = readOrderByBrand(items, dist);
+        items = jsonfile.readFileSync(`./data.json`);
     }
+    if (dist) {
+        if (!Array.isArray(dist)) {
+            dist = [dist];
+        }
+        console.log(dist);
+        let cleanedDist = dist.map((curr) => clean(curr));
+        //let cleanedDist = clean(dist);
+        items = items.filter((item) => cleanedDist.includes(clean(item.distributor)));
+
+    }
+    items = readOrderByBrand(items, dist);
+
     let categoriesDist = [];
     let categories = Object.keys(items);
 
@@ -143,10 +142,9 @@ const HELPERS = {
             .catch(function(err) {
                 console.log(err.message);
                 console.log(err.stack);
-                if (err) {
-                    return res.jsonp([]);
-                }
-
+                let items = jsonfile.readFileSync(`./data.json`);
+                let data = readOrderByDist(items);
+                return res.jsonp(data);
             });
 
     },
