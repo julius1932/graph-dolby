@@ -54,7 +54,7 @@
 <figure class="highcharts-figure">
     <div id="container"></div>
     <p class="highcharts-description">
-        Bar chart showing horizontal columns.
+        
     </p>
 </figure>
 <script>
@@ -68,61 +68,68 @@ const Adapter = {
     }
 }
 Adapter.read('/bybrands', function(results) {
-            console.log(results);
+    console.log(results);
 
-            Highcharts.chart('container', {
-                    chart: {
-                        type: 'bar'
-                    },
-                    title: {
-                        text: 'DD India data - DO11SEP2019-881 Analysis'
-                    },
-                    subtitle: {
-                        text: 'Source: <a href="https://docs.google.com/spreadsheets/d/1NWNFnVyMZ10AwnwFeAirC5vQNh2MgORywAfRckUFVPw/edit#gid=0">Google Sheet</a>'
-                    },
-                    xAxis: {
-                        //categories: ['Africa', 'America', 'Asia', 'Europe', 'Oceania'],
-                        categories: results.categories,
-                       
-                        title: {
-                            text: null
-                        }
-                    },
-                    yAxis: {
-                        min: 0,
-                        title: {
-                            text: 'Number (Quantity)',
-                            align: 'high'
-                        },
-                        labels: {
-                            overflow: 'justify'
-                        }
-                    },
-                    tooltip: {
-                        valueSuffix: ''
-                    },
-                    plotOptions: {
-                        bar: {
-                            dataLabels: {
-                                enabled: true
-                            }
-                        }
-                    },
-                    legend: {
-                        layout: 'vertical',
-                        align: 'right',
-                        verticalAlign: 'top',
-                        x: -40,
-                        y: 80,
-                        floating: true,
-                        borderWidth: 1,
-                        backgroundColor: Highcharts.defaultOptions.legend.backgroundColor || '#FFFFFF',
-                        shadow: true
-                    },
-                    credits: {
-                        enabled: false
-                    },
-                    "series":results.series
-                });
-            });
+    Highcharts.chart('container', {
+        'plotOptions': {
+            'column': {
+                'colorByPoint': true //need to become true for color bar.
+            }
+        },
+        //you can list color at here or with series both are valid
+        'colors': ['#7cb5ec', '#ffa500', '#07023d'],
+        chart: {
+            type: 'bar'
+        },
+        title: {
+            text: 'DD India data - DO11SEP2019-881 Analysis'
+        },
+        subtitle: {
+            text: 'Source: <a href="https://docs.google.com/spreadsheets/d/1NWNFnVyMZ10AwnwFeAirC5vQNh2MgORywAfRckUFVPw/edit#gid=0">Google Sheet</a>'
+        },
+        xAxis: {
+            //categories: ['Africa', 'America', 'Asia', 'Europe', 'Oceania'],
+            categories: results.categories,
+
+            title: {
+                text: null
+            }
+        },
+        yAxis: {
+            min: 0,
+            title: {
+                text: 'Number (Quantity)',
+                align: 'high'
+            },
+            labels: {
+                overflow: 'justify'
+            }
+        },
+        tooltip: {
+            valueSuffix: ''
+        },
+        plotOptions: {
+            bar: {
+                dataLabels: {
+                    enabled: true
+                }
+            }
+        },
+        legend: {
+            layout: 'vertical',
+            align: 'right',
+            verticalAlign: 'top',
+            x: -40,
+            y: 80,
+            floating: true,
+            borderWidth: 1,
+            backgroundColor: Highcharts.defaultOptions.legend.backgroundColor || '#FFFFFF',
+            shadow: true
+        },
+        credits: {
+            enabled: false
+        },
+        "series": results.series
+    });
+});
 </script>

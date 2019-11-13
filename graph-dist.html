@@ -58,7 +58,6 @@
     </form>
     <div id="container"></div>
     <p class="highcharts-description">
-        
     </p>
 </figure>
 <script>
@@ -84,19 +83,28 @@ Adapter.read('/dist', function(results) {
 //     alert(this.value);
 // });
 $('select').on('change', function() {
-  //alert( this.value );
-  showGraph(this.value);
+    //alert( this.value );
+    showGraph(this.value);
 });
+
 function showGraph(dist) {
     Adapter.read(`/bybrands/${encodeURI(dist.split("/").join(""))}`, function(results) {
         console.log(results);
 
         Highcharts.chart('container', {
+
+            'plotOptions': {
+                'column': {
+                    'colorByPoint': true //need to become true for color bar.
+                }
+            },
+            //you can list color at here or with series both are valid
+            'colors': ['#7cb5ec', '#ffa500', '#07023d'],
             chart: {
                 type: 'bar'
             },
             title: {
-                text: 'DD India data - DO11SEP2019-881 Analysi for '+results.dist
+                text: 'DD India data - DO11SEP2019-881 Analysi for ' + results.dist
             },
             subtitle: {
                 text: 'Source: <a href="https://docs.google.com/spreadsheets/d/1NWNFnVyMZ10AwnwFeAirC5vQNh2MgORywAfRckUFVPw/edit#gid=0">Google Sheet</a>'
