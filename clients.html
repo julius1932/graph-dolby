@@ -1,0 +1,219 @@
+<style type="text/css">
+.highcharts-figure,
+.highcharts-data-table table {
+    min-width: 310px;
+    max-width: 800px;
+    margin: 1em auto;
+}
+
+#container {
+    height: auto;
+}
+
+.highcharts-data-table table {
+    font-family: Verdana, sans-serif;
+    border-collapse: collapse;
+    border: 1px solid #EBEBEB;
+    margin: 10px auto;
+    text-align: center;
+    width: 100%;
+    max-width: 500px;
+}
+
+.highcharts-data-table caption {
+    padding: 1em 0;
+    font-size: 1.2em;
+    color: #555;
+}
+
+.highcharts-data-table th {
+    font-weight: 600;
+    padding: 0.5em;
+}
+
+.highcharts-data-table td,
+.highcharts-data-table th,
+.highcharts-data-table caption {
+    padding: 0.5em;
+}
+
+.highcharts-data-table thead tr,
+.highcharts-data-table tr:nth-child(even) {
+    background: #f8f8f8;
+}
+
+.highcharts-data-table tr:hover {
+    background: #f1f7ff;
+}
+</style>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<script src="https://code.highcharts.com/modules/export-data.js"></script>
+<script src="https://code.highcharts.com/modules/accessibility.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<figure class="highcharts-figure">
+    <div id="container">
+        <form action="/clients" method="post" id="qry-form">
+            <select id="key" name="key">
+                <option value="retailerName">retailerName</option>
+                <option value="location">location</option>
+                <option value="city">city</option>
+                <option value="country">country</option>
+                <option value="brandModel#">brandModel#</option>
+                <option value="brandName">brandName</option>
+                <option value="category">category</option>
+                <option value="trademark">trademark</option>
+                <option value="threeFiles">threeFiles</option>
+                <option value="pianoSound">pianoSound</option>
+                <option value="distributor">distributor</option>
+                <option value="countryOfOrigin">countryOfOrigin</option>
+            </select><br>
+            <input type="text" name="value" id="value"><br>
+            <input type="submit" value="Add">
+        </form>
+    </div>
+    <div>
+        <table class="table" id="table">
+            <tbody>
+                <tr>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <form action="/clients" method="post" id="qry-form-post">
+        <input type="submit" value="Submit">
+    </form>
+    <script>
+    
+    const Adapter = {
+        read: (theUrl, callback) => {
+            $.ajax({
+                url: theUrl,
+                dataType: 'jsonp',
+                success: callback
+            });
+        },
+        save: function(dataToSave, theUrl, cb) {
+            $.ajax({
+                url: theUrl,
+                //dataType: 'text',
+                type: 'post',
+                contentType: 'application/x-www-form-urlencoded',
+                data: dataToSave,
+                success: cb
+            });
+        }
+    }
+    $("#qry-form-post").submit(function(event) {
+        event.preventDefault();
+        let QRY_STR = "";
+        const $tableID = $('#table');
+        const $rows = $tableID.find('tr:not(:hidden)');
+        let headers = ["key", "value"];
+        $rows.each(function() {
+            const $td = $(this).find('td');
+
+            const h = {};
+
+            // Use the headers from earlier to name our hash keys
+            if ($td.length >= 2) {
+                let key = $td.eq(0).text();
+                let value = $td.eq(1).text();
+                if (key && value) {
+                    if (!QRY_STR) {
+                        QRY_STR = key + '=' + value;
+                    } else {
+                        QRY_STR += '&' + key + '=' + value;
+                    }
+                }
+            };
+        });
+        //alert(QRY_STR);
+        Adapter.save(QRY_STR, '/clients', function(results) {
+            console.log(results);
+            JSONToCSVConvertor(results, "Data from allv", true);
+        });
+    });
+    $("#qry-form").submit(function(event) {
+        event.preventDefault();
+        var qry = $(this).serialize();
+        var key = $('#key').val();
+        var value = $('#value').val();
+        $('.table tr:last').after(`<tr><td>${key}</td><td>${value}</td></tr>`);
+    });
+
+    function JSONToCSVConvertor(JSONData, ReportTitle, ShowLabel) {
+        //If JSONData is not an object then JSON.parse will parse the JSON string in an Object
+        var arrData = typeof JSONData != 'object' ? JSON.parse(JSONData) : JSONData;
+
+        var CSV = '';
+        //Set Report title in first row or line
+
+        CSV += ReportTitle + '\r\n\n';
+
+        //This condition will generate the Label/Header
+        if (ShowLabel) {
+            var row = "";
+
+            //This loop will extract the label from 1st index of on array
+            for (var index in arrData[0]) {
+
+                //Now convert each value to string and comma-seprated
+                row += index + ',';
+            }
+
+            row = row.slice(0, -1);
+
+            //append Label row with line break
+            CSV += row + '\r\n';
+        }
+
+        //1st loop is to extract each row
+        for (var i = 0; i < arrData.length; i++) {
+            var row = "";
+
+            //2nd loop will extract each column and convert it in string comma-seprated
+            for (var index in arrData[i]) {
+                row += '"' + arrData[i][index] + '",';
+            }
+
+            row.slice(0, row.length - 1);
+
+            //add a line break after each row
+            CSV += row + '\r\n';
+        }
+
+        if (CSV == '') {
+            alert("Invalid data");
+            return;
+        }
+
+        //Generate a file name
+        var fileName = "MyReport_";
+        //this will remove the blank-spaces from the title and replace it with an underscore
+        fileName += ReportTitle.replace(/ /g, "_");
+
+        //Initialize file format you want csv or xls
+        var uri = 'data:text/csv;charset=utf-8,' + escape(CSV);
+
+        // Now the little tricky part.
+        // you can use either>> window.open(uri);
+        // but this will not work in some browsers
+        // or you will not get the correct file extension    
+
+        //this trick will generate a temp <a /> tag
+        var link = document.createElement("a");
+        link.href = uri;
+
+        //set the visibility hidden so it will not effect on your web-layout
+        link.style = "visibility:hidden";
+        link.download = fileName + ".csv";
+
+        //this part will append the anchor tag and remove it after automatic click
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
+    </script>

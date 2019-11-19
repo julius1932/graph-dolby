@@ -6,12 +6,16 @@ const clean = (str) => {
     if (!str) {
         return "";
     }
-    str = str.toUpperCase().trim();
-    str = str.split(".").join("");
-    str = str.split(",").join("");
-    str = str.split("-").join("");
-    str = str.split(" ").join("");
-    str = str.split("/").join("");
+    //console.log(str);
+    if (typeof str === 'string') {
+        str = str.toUpperCase().trim();
+        str = str.split(".").join("");
+        str = str.split(",").join("");
+        str = str.split("-").join("");
+        str = str.split(" ").join("");
+        str = str.split("/").join("");
+    }
+
     return str;
 }
 const readOrderByDist = (data) => {
@@ -114,6 +118,47 @@ const cleanForChart = function(items, dist) {
 }
 
 const HELPERS = {
+    clients: (req, res) => {
+        let params = req.body;
+       // console.log(params);
+        let paramsKeys = Object.keys(params);
+        paramsKeys = paramsKeys.filter((param) => params[param]);
+        //console.log(paramsKeys);
+        gsjson({
+                spreadsheetId: '1NWNFnVyMZ10AwnwFeAirC5vQNh2MgORywAfRckUFVPw',
+                // other options...
+            })
+            .then(function(result) {
+                console.log(result.length);
+                let data = result.filter((itm) => {
+                    let test = true;
+                    for (let i = 0; i < paramsKeys.length; i++) {
+                        let key = paramsKeys[i];
+                        if (Array.isArray(params[key])) {
+                            let arr = params[key].map((curr) => clean(curr));
+                            test = test && arr.includes(clean(itm[key]));
+                        } else {
+                            //console.log(clean(params[key]) + "========" + clean(itm[key]));
+                            test = test && (clean(params[key]) === clean(itm[key]));
+                            //console.log(test);
+                        }
+                    }
+                    return test;
+                });
+                //console.log(data);
+                return res.jsonp(data);
+            })
+            .catch(function(err) {
+                console.log(err.message);
+                console.log(err.stack);
+                if (err) {
+                    let data = cleanForChart(null, dist);
+                    return res.jsonp([]);
+                }
+
+            });
+
+    },
     byBrand: (res, dist) => {
 
         gsjson({
@@ -122,9 +167,9 @@ const HELPERS = {
             })
             .then(function(result) {
                 console.log(result.length);
-                jsonfile.writeFile(`result.json`, result, { spaces: 2 }, function(err) {
+                /*jsonfile.writeFile(`result.json`, result, { spaces: 2 }, function(err) {
                     console.error(err);
-                });
+                });*/
                 let data = cleanForChart(result, dist);
                 return res.jsonp(data);
             })
