@@ -76,17 +76,15 @@
     <div>
         <table class="table" id="table">
             <tbody>
-                <tr>
-                    <td></td>
-                </tr>
             </tbody>
         </table>
     </div>
     <form action="/clients" method="post" id="qry-form-post">
-        <input type="submit" value="Submit">
+        <button type="button" id="pdf">PDF analytic</button>
+        <button type="button" id='clear'>Clear</button>
+        <button type="button" id='excel'>Excel Sheet</button>
     </form>
     <script>
-    
     const Adapter = {
         read: (theUrl, callback) => {
             $.ajax({
@@ -106,8 +104,37 @@
             });
         }
     }
-    $("#qry-form-post").submit(function(event) {
-        event.preventDefault();
+    $("#clear").click(function() {
+        $(".table > tbody").html("");
+    });
+    $('#excel').click(function() {
+        let QRY_STR = "";
+        const $tableID = $('#table');
+        const $rows = $tableID.find('tr:not(:hidden)');
+        let headers = ["key", "value"];
+        $rows.each(function() {
+            const $td = $(this).find('td');
+            const h = {};
+            // Use the headers from earlier to name our hash keys
+            if ($td.length >= 2) {
+                let key = $td.eq(0).text();
+                let value = $td.eq(1).text();
+                if (key && value) {
+                    if (!QRY_STR) {
+                        QRY_STR = key + '=' + value;
+                    } else {
+                        QRY_STR += '&' + key + '=' + value;
+                    }
+                }
+            };
+        });
+        //alert(QRY_STR);
+        Adapter.save(QRY_STR, '/clients', function(results) {
+            console.log(results);
+            JSONToCSVConvertor(results, "Data from allv", true);
+        });
+    });
+    $("#pdf").click(function() {
         let QRY_STR = "";
         const $tableID = $('#table');
         const $rows = $tableID.find('tr:not(:hidden)');
@@ -130,18 +157,18 @@
                 }
             };
         });
-        //alert(QRY_STR);
-        Adapter.save(QRY_STR, '/clients', function(results) {
-            console.log(results);
-            JSONToCSVConvertor(results, "Data from allv", true);
-        });
+        var win = window.open('/clients?' + QRY_STR, '_blank');
+        win.focus();
     });
     $("#qry-form").submit(function(event) {
         event.preventDefault();
         var qry = $(this).serialize();
         var key = $('#key').val();
         var value = $('#value').val();
-        $('.table tr:last').after(`<tr><td>${key}</td><td>${value}</td></tr>`);
+        //$('.table tr:last').after(`<tr><td>${key}</td><td>${value}</td></tr>`);
+        if (value && value.trim()) {
+            $('.table  > tbody:last-child').append(`<tr><td>${key}</td><td>${value}</td></tr>`);
+        }
     });
 
     function JSONToCSVConvertor(JSONData, ReportTitle, ShowLabel) {
