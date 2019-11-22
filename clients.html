@@ -123,7 +123,7 @@
                     if (!QRY_STR) {
                         QRY_STR = key + '=' + encodeURI(value);
                     } else {
-                        QRY_STR += '&' + key + encodeURI(value);
+                        QRY_STR += '&' + key + '='+ encodeURI(value);
                     }
                 }
             };
@@ -157,7 +157,7 @@
                 }
             };
         });
-        var win = window.open('/clients?' + QRY_STR, '_blank');
+        var win = window.open('/client?' + QRY_STR, '_blank');
         win.focus();
     });
     $("#qry-form").submit(function(event) {

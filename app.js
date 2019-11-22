@@ -42,13 +42,13 @@ app.get('/dist', function(req, res) {
     return HELPERS.distList(res);
 });
 //:retailerName?/:location?/:city?/:country?/:brandModel?/:brandName?/:category?/:trademark?/:threeFiles?/:pianoSound?/:distributor?/:countryOfOrigin?
-app.get(`/client`, function(req, res) {
+app.get(`/clients`, function(req, res) {
     res.sendFile(__dirname + '/clients.html');
 });
 app.post(`/clients`, function(req, res) {
      return HELPERS.clientsExcel(req, res);
 });
-app.get(`/clients`, function(req, res) {
+app.get(`/client`, function(req, res) {
     HELPERS.clients(req, res, function(result) {
 
         let t1Data = result.all.filter((item) => TIERS.T1.includes(clean(item.brandName)));
@@ -63,11 +63,6 @@ app.get(`/clients`, function(req, res) {
         let t3Data = result.all.filter((item) => TIERS.T3.includes(clean(item.brandName)));
         let t3Sereis = HELPERS.cleanForChart(t3Data, "");
         let t3SereisManu = HELPERS.cleanForChart(t3Data, []);
-
-        console.log('t1Data.length');
-        console.log(t2Data.length);
-        console.log('t1Data.length');
-        console.log(t2Sereis);
         let data = {
             //template: { 'shortid': 'rkgavynmhS' }, //,
             template: { 'shortid': 'BkeIiSXBnS' }, //,

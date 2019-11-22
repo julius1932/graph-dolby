@@ -96,7 +96,7 @@ const cleanForChart = function(items, dist) {
     };
     if (!items || items.length == 0) {
         console.log("ppppppppppppppppppppppppppp");
-        items = jsonfile.readFileSync(`./data.json`);
+        //items = jsonfile.readFileSync(`./data.json`);
     }
     console.log(".........");
     console.log(items.length);
@@ -155,13 +155,13 @@ const HELPERS = {
        // console.log(params);
         let paramsKeys = Object.keys(params);
         paramsKeys = paramsKeys.filter((param) => params[param]);
-        //console.log(paramsKeys);
+        console.log(paramsKeys);
         gsjson({
                 spreadsheetId: '1NWNFnVyMZ10AwnwFeAirC5vQNh2MgORywAfRckUFVPw',
                 // other options...
             })
             .then(function(result) {
-                console.log(result.length);
+                //console.log(result.length);
                 let data = result.filter((itm) => {
                     let test = true;
                     for (let i = 0; i < paramsKeys.length; i++) {
@@ -170,8 +170,11 @@ const HELPERS = {
                             let arr = params[key].map((curr) => clean(curr));
                             test = test && arr.includes(clean(itm[key]));
                         } else {
-                            //console.log(clean(params[key]) + "========" + clean(itm[key]));
+                            
                             test = test && (clean(params[key]) === clean(itm[key]));
+                            if(test){
+                                console.log(clean(params[key]) + "========" + clean(itm[key]));
+                            }
                             //console.log(test);
                         }
                     }
@@ -302,9 +305,9 @@ const HELPERS = {
             .catch(function(err) {
                 console.log(err.message);
                 console.log(err.stack);
-                let items = jsonfile.readFileSync(`./data.json`);
-                let data = readOrderByDist(items);
-                return res.jsonp(data);
+                //let items = jsonfile.readFileSync(`./data.json`);
+                //let data = readOrderByDist(items);
+                return res.jsonp([]);
             });
 
     },
