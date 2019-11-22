@@ -121,9 +121,9 @@
                 let value = $td.eq(1).text();
                 if (key && value) {
                     if (!QRY_STR) {
-                        QRY_STR = key + '=' + value;
+                        QRY_STR = key + '=' + encodeURI(value);
                     } else {
-                        QRY_STR += '&' + key + '=' + value;
+                        QRY_STR += '&' + key + encodeURI(value);
                     }
                 }
             };
@@ -150,9 +150,9 @@
                 let value = $td.eq(1).text();
                 if (key && value) {
                     if (!QRY_STR) {
-                        QRY_STR = key + '=' + value;
+                        QRY_STR = key + '=' +encodeURI(value);
                     } else {
-                        QRY_STR += '&' + key + '=' + value;
+                        QRY_STR += '&' + key + '=' + encodeURI(value);
                     }
                 }
             };
