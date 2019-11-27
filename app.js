@@ -27,6 +27,11 @@ app.get('/', function(req, res) {
 app.get('/bydist', function(req, res) {
     res.sendFile(__dirname + '/graph-dist.html');
 });
+app.get('/data/:key', function(req, res) {
+    console.log("pppppp09oiii");
+    let key = req.params.key || "";
+    return HELPERS.dataByKey(req, res);
+});
 app.get('/byBrands/:dist?', function(req, res) {
     let dist = req.params.dist || "";
     console.log(req.body);
@@ -46,7 +51,7 @@ app.get(`/clients`, function(req, res) {
     res.sendFile(__dirname + '/clients.html');
 });
 app.post(`/clients`, function(req, res) {
-     return HELPERS.clientsExcel(req, res);
+    return HELPERS.clientsExcel(req, res);
 });
 app.get(`/client`, function(req, res) {
     HELPERS.clients(req, res, function(result) {
@@ -64,7 +69,7 @@ app.get(`/client`, function(req, res) {
         let t3Sereis = HELPERS.cleanForChart(t3Data, "");
         let t3SereisManu = HELPERS.cleanForChart(t3Data, []);
         let data = {
-            //template: { 'shortid': 'rkgavynmhS' }, //,
+            //template: { 'shortid': 'BkeIiSXBnS' }, //,
             template: { 'shortid': 'BkeIiSXBnS' }, //,
             data: {
                 sound: result.sound,
@@ -104,12 +109,13 @@ app.get(`/client`, function(req, res) {
             json: data
         };*/
         let options = {
-            uri: 'https://playground.jsreport.net/w/julius1932/9mFYNpcR/api/report',
+            //uri: 'https://playground.jsreport.net/w/julius1932/9mFYNpcR/api/report',
+            uri: 'https://playground.jsreport.net/w/julius1932/ix4zEU5a/api/report',
             method: 'POST',
             json: data
         };
         let request = require('request');
-        res.setHeader('Content-Type', 'application/pdf');
+        //res.setHeader('Content-Type', 'application/pdf');
         request(options).pipe(res);
     });
 

@@ -69,12 +69,14 @@
                 <option value="distributor">distributor</option>
                 <option value="countryOfOrigin">countryOfOrigin</option>
             </select><br>
-            <input type="text" name="value" id="value"><br>
+            <input type="text" name="value" id="value" list="values"><br>
+            <datalist id="values">
+            </datalist>
             <input type="submit" value="Add">
         </form>
     </div>
     <div>
-        <table class="table" id="table">
+        <table class="table table-striped" id="table">
             <tbody>
             </tbody>
         </table>
@@ -85,6 +87,8 @@
         <button type="button" id='excel'>Excel Sheet</button>
     </form>
     <script>
+    let currValues = [];
+    init('retailername');
     const Adapter = {
         read: (theUrl, callback) => {
             $.ajax({
@@ -123,7 +127,7 @@
                     if (!QRY_STR) {
                         QRY_STR = key + '=' + encodeURI(value);
                     } else {
-                        QRY_STR += '&' + key + '='+ encodeURI(value);
+                        QRY_STR += '&' + key + '=' + encodeURI(value);
                     }
                 }
             };
@@ -150,7 +154,7 @@
                 let value = $td.eq(1).text();
                 if (key && value) {
                     if (!QRY_STR) {
-                        QRY_STR = key + '=' +encodeURI(value);
+                        QRY_STR = key + '=' + encodeURI(value);
                     } else {
                         QRY_STR += '&' + key + '=' + encodeURI(value);
                     }
@@ -160,16 +164,42 @@
         var win = window.open('/client?' + QRY_STR, '_blank');
         win.focus();
     });
+    $('select#key').change(function() {
+        var optionSelected = $(this).find("option:selected");
+        var valueSelected = optionSelected.val();
+        $('#value').val("");
+        document.getElementById('values').innerHTML = "";
+        init(valueSelected);
+
+    });
     $("#qry-form").submit(function(event) {
         event.preventDefault();
         var qry = $(this).serialize();
         var key = $('#key').val();
         var value = $('#value').val();
         //$('.table tr:last').after(`<tr><td>${key}</td><td>${value}</td></tr>`);
-        if (value && value.trim()) {
-            $('.table  > tbody:last-child').append(`<tr><td>${key}</td><td>${value}</td></tr>`);
+        if (value && value.trim() && currValues.includes(value)) {
+            $('.table  > tbody:last-child').append(`<tr id="${key}${value}"><td>${key}</td><td>${value}</td><td><button type="button" onclick="deleteRow('${key}${value}')">Remove</button></td></tr>`);
         }
     });
+
+    function deleteRow(rowid) {
+        console.log(rowid);
+        var row = document.getElementById(rowid);
+        row.parentNode.removeChild(row);
+    }
+
+    function init(key) {
+        $.getJSON("/data/" + key, function(data) {
+            console.log(data);
+            currValues = data;
+            var options = '';
+            for (var i = 0; i < data.length; i++)
+                options += '<option value="' + data[i] + '" />';
+
+            document.getElementById('values').innerHTML = options;
+        });
+    }
 
     function JSONToCSVConvertor(JSONData, ReportTitle, ShowLabel) {
         //If JSONData is not an object then JSON.parse will parse the JSON string in an Object

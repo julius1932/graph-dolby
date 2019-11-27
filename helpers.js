@@ -146,13 +146,59 @@ const cleanForChart = function(items, dist) {
     if (dist) {
         categories = categoriesDist;
     }
-    return { categories, series: [series.models, series.pio, series.tm], dist: dist, DOLBY_AV: DOLBY_AV,brandsWithDolby:brandsWithDolby,brandsWithOutDolby:brandsWithOutDolby };
+    return { categories, series: [series.models, series.pio, series.tm], dist: dist, DOLBY_AV: DOLBY_AV, brandsWithDolby: brandsWithDolby, brandsWithOutDolby: brandsWithOutDolby };
 }
 
 const HELPERS = {
+    dataByKey: (req, res) => {
+        let key = req.params.key || "";
+        console.log(key);
+        if (key == "brandmodel") {
+            key = 'brandModel#';
+        }
+        if (key == "retailername") {
+            key = 'retailerName';
+        }
+        if (key == "brandname") {
+            key = 'brandName';
+        }
+        if (key == "threefiles") {
+            key = 'threeFiles';
+        }
+        if (key == "pianosound") {
+            key = 'pianoSound';
+        }
+         if (key == "countryoforigin") {
+            key = 'countryOfOrigin';
+        }
+        console.log(key);
+        gsjson({
+                spreadsheetId: '1NWNFnVyMZ10AwnwFeAirC5vQNh2MgORywAfRckUFVPw',
+                // other options...
+            })
+            .then(function(result) {
+                result = result.map((item) => item[key]);
+                let uniqueArray = result.filter(function(item, pos) {
+                    return result.indexOf(item) == pos;
+                })
+                uniqueArray = uniqueArray.sort();
+                //console.log(result);
+                return res.jsonp(uniqueArray);
+            })
+            .catch(function(err) {
+                console.log(err.message);
+                console.log(err.stack);
+                if (err) {
+
+                    return res.jsonp([]);
+                }
+
+            });
+
+    },
     clientsExcel: (req, res) => {
         let params = req.body;
-       // console.log(params);
+        // console.log(params);
         let paramsKeys = Object.keys(params);
         paramsKeys = paramsKeys.filter((param) => params[param]);
         console.log(paramsKeys);
@@ -170,9 +216,9 @@ const HELPERS = {
                             let arr = params[key].map((curr) => clean(curr));
                             test = test && arr.includes(clean(itm[key]));
                         } else {
-                            
+
                             test = test && (clean(params[key]) === clean(itm[key]));
-                            if(test){
+                            if (test) {
                                 console.log(clean(params[key]) + "========" + clean(itm[key]));
                             }
                             //console.log(test);
@@ -187,7 +233,7 @@ const HELPERS = {
                 console.log(err.message);
                 console.log(err.stack);
                 if (err) {
-                    let data = cleanForChart(null, dist);
+
                     return res.jsonp([]);
                 }
 
