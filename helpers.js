@@ -78,8 +78,8 @@ const readOrderByBrand = (data, dist) => {
     return items;
 }
 const cleanForChart = function(items, dist) {
-    console.log("items.length");
-    console.log(items.length);
+    //console.log("items.length");
+    //console.log(items.length);
     let series = {
         models: {
             name: "Models",
@@ -98,8 +98,8 @@ const cleanForChart = function(items, dist) {
         console.log("ppppppppppppppppppppppppppp");
         //items = jsonfile.readFileSync(`./data.json`);
     }
-    console.log(".........");
-    console.log(items.length);
+    //console.log(".........");
+    // console.log(items.length);
     if (dist) {
         if (!Array.isArray(dist)) {
             dist = [dist];
@@ -152,26 +152,26 @@ const cleanForChart = function(items, dist) {
 const HELPERS = {
     dataByKey: (req, res) => {
         let key = req.params.key || "";
-        console.log(key);
-        if (key == "brandmodel") {
+        // console.log(key);
+        if (key == "brandmodel" || key == "brandModel") {
             key = 'brandModel#';
         }
-        if (key == "retailername") {
+        if (key == "retailername" || key == "retailerName") {
             key = 'retailerName';
         }
-        if (key == "brandname") {
+        if (key == "brandname" || key == "brandName") {
             key = 'brandName';
         }
-        if (key == "threefiles") {
+        if (key == "threefiles" || key == "threeFiles") {
             key = 'threeFiles';
         }
-        if (key == "pianosound") {
+        if (key == "pianosound" || key == "pianoSound") {
             key = 'pianoSound';
         }
-         if (key == "countryoforigin") {
+        if (key == "countryoforigin" || key == "countryOfOrigin") {
             key = 'countryOfOrigin';
         }
-        console.log(key);
+        //console.log(key);
         gsjson({
                 spreadsheetId: '1NWNFnVyMZ10AwnwFeAirC5vQNh2MgORywAfRckUFVPw',
                 // other options...
@@ -214,12 +214,12 @@ const HELPERS = {
                         let key = paramsKeys[i];
                         if (Array.isArray(params[key])) {
                             let arr = params[key].map((curr) => clean(curr));
-                            test = test && arr.includes(clean(itm[key]));
+                            test = test && arr.includes(clean(itm[mapKeys(key)]));
                         } else {
 
-                            test = test && (clean(params[key]) === clean(itm[key]));
+                            test = test && (clean(params[key]) === clean(itm[mapKeys(key)]));
                             if (test) {
-                                console.log(clean(params[key]) + "========" + clean(itm[key]));
+                                console.log(clean(params[key]) + "========" + clean(itm[mapKeys(key)]));
                             }
                             //console.log(test);
                         }
@@ -258,17 +258,17 @@ const HELPERS = {
                         let key = paramsKeys[i];
                         if (Array.isArray(params[key])) {
                             let arr = params[key].map((curr) => clean(curr));
-                            test = test && arr.includes(clean(itm[key]));
+                            test = test && arr.includes(clean(itm[mapKeys(key)]));
                         } else {
                             //console.log(clean(params[key]) + "========" + clean(itm[key]));
-                            test = test && (clean(params[key]) === clean(itm[key]));
+                            test = test && (clean(params[key]) === clean(itm[mapKeys(key)]));
                             //console.log(test);
                         }
                     }
                     // console.log(test);
                     return test;
                 });
-                console.log(data.length);
+                console.log(data.length + "=======");
 
                 let sound = {
                     holiday1: 0,
@@ -360,4 +360,25 @@ const HELPERS = {
     cleanForChart: cleanForChart
 }
 
+function mapKeys(key) {
+    if (key == "brandmodel" || key == "brandModel") {
+       return 'brandModel#';
+    }
+    if (key == "retailername" || key == "retailerName") {
+       return 'retailerName';
+    }
+    if (key == "brandname" || key == "brandName") {
+       return 'brandName';
+    }
+    if (key == "threefiles" || key == "threeFiles") {
+       return 'threeFiles';
+    }
+    if (key == "pianosound" || key == "pianoSound") {
+        return  'pianoSound';
+    }
+    if (key == "countryoforigin" || key == "countryOfOrigin") {
+        return 'countryOfOrigin';
+    }
+    return key;
+}
 module.exports = HELPERS;

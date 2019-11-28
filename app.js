@@ -55,7 +55,7 @@ app.post(`/clients`, function(req, res) {
 });
 app.get(`/client`, function(req, res) {
     HELPERS.clients(req, res, function(result) {
-
+        console.log(result.length);
         let t1Data = result.all.filter((item) => TIERS.T1.includes(clean(item.brandName)));
 
         let t1Sereis = HELPERS.cleanForChart(t1Data, "");
@@ -109,8 +109,8 @@ app.get(`/client`, function(req, res) {
             json: data
         };*/
         let options = {
-            //uri: 'https://playground.jsreport.net/w/julius1932/9mFYNpcR/api/report',
-            uri: 'https://playground.jsreport.net/w/julius1932/ix4zEU5a/api/report',
+            uri: 'https://playground.jsreport.net/w/anon/yk_v_ILd/api/report',
+            //uri: 'https://playground.jsreport.net/w/julius1932/ix4zEU5a/api/report',
             method: 'POST',
             json: data
         };

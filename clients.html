@@ -58,16 +58,16 @@
     <div id="container">
         <form action="/clients" method="post" id="qry-form">
             <select id="key" name="key">
-                <option value="retailerName">retailerName</option>
+                <option value="retailerName">retailer Name</option>
                 <option value="location">location</option>
                 <option value="city">city</option>
                 <option value="country">country</option>
-                <option value="brandModel#">brandModel#</option>
+                <option value="brandModel">brand Model Number</option>
                 <option value="brandName">brandName</option>
                 <option value="category">category</option>
                 <option value="trademark">trademark</option>
-                <option value="threeFiles">threeFiles</option>
-                <option value="pianoSound">pianoSound</option>
+                <option value="threeFiles">three Files</option>
+                <option value="pianoSound">piano Sound</option>
                 <option value="distributor">distributor</option>
                 <option value="countryOfOrigin">countryOfOrigin</option>
             </select> </br>
@@ -154,6 +154,24 @@
             if ($td.length >= 2) {
                 let key = $td.eq(0).text();
                 let value = $td.eq(1).text();
+                if (key == "brandmodel" || key == "brandModel") {
+                    key = 'brandModel#';
+                }
+                if (key == "retailername" || key == "retailerName") {
+                    key = 'retailerName';
+                }
+                if (key == "brandname" || key == "brandName") {
+                    key = 'brandName';
+                }
+                if (key == "threefiles" || key == "threeFiles") {
+                    key = 'threeFiles';
+                }
+                if (key == "pianosound" || key == "pianoSound") {
+                    key = 'pianoSound';
+                }
+                if (key == "countryoforigin" || key == "countryOfOrigin") {
+                    key = 'countryOfOrigin';
+                }
                 if (key && value) {
                     if (!QRY_STR) {
                         QRY_STR = key + '=' + encodeURI(value);
@@ -170,12 +188,13 @@
         //document.getElementById("select#values").disabled = true;
         var optionSelected = $(this).find("option:selected");
         var valueSelected = optionSelected.val();
+        ///alert(valueSelected);
         init(valueSelected);
 
     });
     $("#qry-form").submit(function(event) {
         event.preventDefault();
-        
+
         var key = $('#key').val();
         var value = $('#values').val();
         if (value && value.trim() && currValues.includes(value)) {
