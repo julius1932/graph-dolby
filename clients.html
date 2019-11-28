@@ -47,11 +47,13 @@
 }
 </style>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.8.5/css/selectize.default.css">
 <script src="https://code.highcharts.com/highcharts.js"></script>
 <script src="https://code.highcharts.com/modules/exporting.js"></script>
 <script src="https://code.highcharts.com/modules/export-data.js"></script>
 <script src="https://code.highcharts.com/modules/accessibility.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.8.5/js/standalone/selectize.min.js"></script>
 <figure class="highcharts-figure">
     <div id="container">
         <form action="/clients" method="post" id="qry-form">
@@ -68,10 +70,9 @@
                 <option value="pianoSound">pianoSound</option>
                 <option value="distributor">distributor</option>
                 <option value="countryOfOrigin">countryOfOrigin</option>
-            </select><br>
-            <input type="text" name="value" id="value" list="values"><br>
-            <datalist id="values">
-            </datalist>
+            </select> </br>
+            <select id="values" name="values">
+            </select>
             <input type="submit" value="Add">
         </form>
     </div>
@@ -87,6 +88,7 @@
         <button type="button" id='excel'>Excel Sheet</button>
     </form>
     <script>
+    $('select').selectize({});
     let currValues = [];
     init('retailername');
     const Adapter = {
@@ -165,19 +167,17 @@
         win.focus();
     });
     $('select#key').change(function() {
+        //document.getElementById("select#values").disabled = true;
         var optionSelected = $(this).find("option:selected");
         var valueSelected = optionSelected.val();
-        $('#value').val("");
-        document.getElementById('values').innerHTML = "";
         init(valueSelected);
 
     });
     $("#qry-form").submit(function(event) {
         event.preventDefault();
-        var qry = $(this).serialize();
+        
         var key = $('#key').val();
-        var value = $('#value').val();
-        //$('.table tr:last').after(`<tr><td>${key}</td><td>${value}</td></tr>`);
+        var value = $('#values').val();
         if (value && value.trim() && currValues.includes(value)) {
             $('.table  > tbody:last-child').append(`<tr id="${key}${value}"><td>${key}</td><td>${value}</td><td><button type="button" onclick="deleteRow('${key}${value}')">Remove</button></td></tr>`);
         }
@@ -190,14 +190,20 @@
     }
 
     function init(key) {
+        var selectize = $("select#values")[0].selectize;
+        selectize.clear();
+        selectize.clearOptions();
         $.getJSON("/data/" + key, function(data) {
             console.log(data);
             currValues = data;
-            var options = '';
-            for (var i = 0; i < data.length; i++)
-                options += '<option value="' + data[i] + '" />';
+            var options = [];
+            for (var i = 0; i < data.length; i++) {
+                options.push({ text: data[i], value: data[i] });
+            }
+            selectize.load(function(callback) {
+                callback(options);
+            });
 
-            document.getElementById('values').innerHTML = options;
         });
     }
 
