@@ -245,7 +245,7 @@ const HELPERS = {
     },
     clients: (req, res, callback) => {
         let params = req.query;
-console.log("=======");
+        console.log("=======");
         delete params.tier1;
         delete params.tier2;
         delete params.tier3;
@@ -275,7 +275,7 @@ console.log("=======");
                     // console.log(test);
                     return test;
                 });
-                
+
 
                 let sound = {
                     holiday1: 0,
