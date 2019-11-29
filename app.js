@@ -3,7 +3,7 @@ const app = express();
 const gsjson = require('google-spreadsheet-to-json');
 const bodyParser = require('body-parser');
 
-const TIERS = {
+let TIERS = {
     T1: ['LG', 'SONY', 'SAMSUNG'],
     T2: ['TCL', 'VU', 'PANASONIC', 'SHARP', 'SKYWORTH', 'PHILIPS', 'HITACHI',
         'SANSUI', 'JVC'
@@ -54,18 +54,37 @@ app.post(`/clients`, function(req, res) {
     return HELPERS.clientsExcel(req, res);
 });
 app.get(`/client`, function(req, res) {
+    let params = req.query;
+    console.log(params);
+    let t1 = params.tier1 || TIERS.T1;
+    let t2 = params.tier2 || TIERS.T2;
+    let t3 = params.tier3 || TIERS.T3;
+
+    if (!Array.isArray(t1)) {
+        t1 = [t1];
+    }
+    if (!Array.isArray(t2)) {
+        t2 = [t2];
+    }
+    if (!Array.isArray(t3)) {
+        t3 = [t3];
+    }
+    t1 = t1.map(x => clean(x));
+    t2 = t3.map(x => clean(x));
+    t3 = t3.map(x => clean(x));
+    console.log(t1);
     HELPERS.clients(req, res, function(result) {
         console.log(result.length);
-        let t1Data = result.all.filter((item) => TIERS.T1.includes(clean(item.brandName)));
+        let t1Data = result.all.filter((item) => t1.includes(clean(item.brandName)));
 
         let t1Sereis = HELPERS.cleanForChart(t1Data, "");
         let t1SereisManu = HELPERS.cleanForChart(t1Data, []);
 
-        let t2Data = result.all.filter((item) => TIERS.T2.includes(clean(item.brandName)));
+        let t2Data = result.all.filter((item) => t2.includes(clean(item.brandName)));
         let t2Sereis = HELPERS.cleanForChart(t2Data, "");
         let t2SereisManu = HELPERS.cleanForChart(t2Data, []);
 
-        let t3Data = result.all.filter((item) => TIERS.T3.includes(clean(item.brandName)));
+        let t3Data = result.all.filter((item) => t3.includes(clean(item.brandName)));
         let t3Sereis = HELPERS.cleanForChart(t3Data, "");
         let t3SereisManu = HELPERS.cleanForChart(t3Data, []);
         let data = {

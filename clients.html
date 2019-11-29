@@ -73,6 +73,7 @@
             </select> </br>
             <select id="values" name="values">
             </select>
+            </br>
             <input type="submit" value="Add">
         </form>
     </div>
@@ -82,6 +83,16 @@
             </tbody>
         </table>
     </div>
+    Tier 1
+    <select id="tier1" name="tier1" multiple>
+    </select>
+    Tier 2
+    <select id="tier2" name="tier2" multiple>
+    </select>
+    Tier 3
+    <select id="tier3" name="tier3" multiple>
+    </select> </br>
+    </div>
     <form action="/clients" method="post" id="qry-form-post">
         <button type="button" id="pdf">PDF analytic</button>
         <button type="button" id='clear'>Clear</button>
@@ -90,7 +101,10 @@
     <script>
     $('select').selectize({});
     let currValues = [];
-    init('retailername');
+    init('retailername', "values");
+
+    addTier();
+
     const Adapter = {
         read: (theUrl, callback) => {
             $.ajax({
@@ -142,6 +156,20 @@
     });
     $("#pdf").click(function() {
         let QRY_STR = "";
+        let tiers = [1, 2, 3];
+        tiers.forEach((i) => {
+            let tier = $('#tier'+i).val();
+            let tr='tier'+i;
+            tier.forEach((curTr) => {
+                if (!QRY_STR) {
+                    QRY_STR = tr+"=" + curTr;
+                } else {
+                    QRY_STR += "&"+tr+"=" +curTr;
+                }
+            })
+        });
+        
+        //alert(QRY_STR);
         const $tableID = $('#table');
         const $rows = $tableID.find('tr:not(:hidden)');
         let headers = ["key", "value"];
@@ -189,7 +217,7 @@
         var optionSelected = $(this).find("option:selected");
         var valueSelected = optionSelected.val();
         ///alert(valueSelected);
-        init(valueSelected);
+        init(valueSelected, "values");
 
     });
     $("#qry-form").submit(function(event) {
@@ -208,8 +236,28 @@
         row.parentNode.removeChild(row);
     }
 
-    function init(key) {
-        var selectize = $("select#values")[0].selectize;
+    function addTier() {
+
+        $.getJSON("/data/brandName", function(data) {
+            var tiers = ["tier1", "tier2", "tier3"];
+            tiers.forEach((tier) => {
+                var selectize = $("select#" + tier)[0].selectize;
+                selectize.clear();
+                selectize.clearOptions();
+                var options = [];
+                for (var i = 0; i < data.length; i++) {
+                    options.push({ text: data[i], value: data[i] });
+                }
+                selectize.load(function(callback) {
+                    callback(options);
+                });
+            })
+
+        });
+    }
+
+    function init(key, id) {
+        var selectize = $("select#" + id)[0].selectize;
         selectize.clear();
         selectize.clearOptions();
         $.getJSON("/data/" + key, function(data) {

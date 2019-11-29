@@ -151,6 +151,7 @@ const cleanForChart = function(items, dist) {
 
 const HELPERS = {
     dataByKey: (req, res) => {
+
         let key = req.params.key || "";
         // console.log(key);
         if (key == "brandmodel" || key == "brandModel") {
@@ -198,7 +199,9 @@ const HELPERS = {
     },
     clientsExcel: (req, res) => {
         let params = req.body;
-        // console.log(params);
+        delete params.tier1;
+        delete params.tier2;
+        delete params.tier3;
         let paramsKeys = Object.keys(params);
         paramsKeys = paramsKeys.filter((param) => params[param]);
         console.log(paramsKeys);
@@ -242,6 +245,10 @@ const HELPERS = {
     },
     clients: (req, res, callback) => {
         let params = req.query;
+console.log("=======");
+        delete params.tier1;
+        delete params.tier2;
+        delete params.tier3;
         console.log(params);
         let paramsKeys = Object.keys(params);
         paramsKeys = paramsKeys.filter((param) => params[param]);
@@ -268,7 +275,7 @@ const HELPERS = {
                     // console.log(test);
                     return test;
                 });
-                console.log(data.length + "=======");
+                
 
                 let sound = {
                     holiday1: 0,
@@ -362,19 +369,19 @@ const HELPERS = {
 
 function mapKeys(key) {
     if (key == "brandmodel" || key == "brandModel") {
-       return 'brandModel#';
+        return 'brandModel#';
     }
     if (key == "retailername" || key == "retailerName") {
-       return 'retailerName';
+        return 'retailerName';
     }
     if (key == "brandname" || key == "brandName") {
-       return 'brandName';
+        return 'brandName';
     }
     if (key == "threefiles" || key == "threeFiles") {
-       return 'threeFiles';
+        return 'threeFiles';
     }
     if (key == "pianosound" || key == "pianoSound") {
-        return  'pianoSound';
+        return 'pianoSound';
     }
     if (key == "countryoforigin" || key == "countryOfOrigin") {
         return 'countryOfOrigin';
