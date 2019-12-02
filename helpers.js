@@ -1,17 +1,5 @@
 const jsonfile = require('jsonfile');
 const gsjson = require('google-spreadsheet-to-json');
-const TIERS = {
-    T1: ['LG', 'SONY', 'SAMSUNG'],
-    T2: ['TCL', 'VU', 'PANASONIC', 'SHARP', 'SKYWORTH', 'PHILIPS', 'HITACHI',
-        'SANSUI', 'JVC'
-    ],
-    T3: ['HAIER', 'LLOYD', 'RECONNECT', 'VU', 'LLOYD', 'ONIDA', 'KORYO', 'IMPEX',
-        'CROMA', 'AMSTRAD', 'MICROMAX', 'ADZEN', 'HENRY', 'IFFALCON', 'INTEX', 'METZ',
-        'MI', 'NVY', 'T-SERIES', 'VISE', 'PANORAMA', 'KODAK - 1', 'AKAI - 3', 'BELTEK - 2',
-        'DETEL - 4', 'MITASHI - 4', 'OSCAR - 1', 'DAIWA'
-    ]
-};
-
 //const LOCAL_HELPERS = {
 const clean = (str) => {
     if (!str) {

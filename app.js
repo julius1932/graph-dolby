@@ -3,18 +3,6 @@ const app = express();
 const gsjson = require('google-spreadsheet-to-json');
 const bodyParser = require('body-parser');
 
-let TIERS = {
-    T1: ['LG', 'SONY', 'SAMSUNG'],
-    T2: ['TCL', 'VU', 'PANASONIC', 'SHARP', 'SKYWORTH', 'PHILIPS', 'HITACHI',
-        'SANSUI', 'JVC'
-    ],
-    T3: ['HAIER', 'LLOYD', 'RECONNECT', 'VU', 'LLOYD', 'ONIDA', 'KORYO', 'IMPEX',
-        'CROMA', 'AMSTRAD', 'MICROMAX', 'ADZEN', 'HENRY', 'IFFALCON', 'INTEX', 'METZ',
-        'MI', 'NVY', 'T-SERIES', 'VISE', 'PANORAMA', 'KODAK - 1', 'AKAI - 3', 'BELTEK - 2',
-        'DETEL - 4', 'MITASHI - 4', 'OSCAR - 1', 'DAIWA'
-    ]
-};
-
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
@@ -56,25 +44,31 @@ app.post(`/clients`, function(req, res) {
 app.get(`/client`, function(req, res) {
     let params = req.query;
     console.log(params);
-    let t1 = params.tier1 || TIERS.T1;
-    let t2 = params.tier2 || TIERS.T2;
-    let t3 = params.tier3 || TIERS.T3;
+    let t1 = params.tier1 || [];
+    let t2 = params.tier2 || [];
+    let t3 = params.tier3 || [];
+
+    
 
     if (!Array.isArray(t1)) {
         t1 = [t1];
     }
     if (!Array.isArray(t2)) {
-        t2 = [t2];
+        let temp=t2;
+        console.log("ooooooooooooooooooooooopppppiiiiiiiiiiiiiiiiii ", temp);
+        
+        t2 = [temp];
     }
     if (!Array.isArray(t3)) {
         t3 = [t3];
     }
+    console.log(t1, t2, t3);
     t1 = t1.map(x => clean(x));
-    t2 = t3.map(x => clean(x));
+    t2 = t2.map(x => clean(x));
     t3 = t3.map(x => clean(x));
-    console.log(t1);
+    console.log(t1, t2, t3);
     HELPERS.clients(req, res, function(result) {
-        console.log(result.length);
+
         let t1Data = result.all.filter((item) => t1.includes(clean(item.brandName)));
 
         let t1Sereis = HELPERS.cleanForChart(t1Data, "");
@@ -87,6 +81,11 @@ app.get(`/client`, function(req, res) {
         let t3Data = result.all.filter((item) => t3.includes(clean(item.brandName)));
         let t3Sereis = HELPERS.cleanForChart(t3Data, "");
         let t3SereisManu = HELPERS.cleanForChart(t3Data, []);
+
+        let t1Empty = (t1.length != 0);
+        let t2Empty = (t2.length != 0);
+        let t3Empty = (t3.length != 0);
+        console.log(t1Empty, t2Empty, t3Empty);
         let data = {
             //template: { 'shortid': 'BkeIiSXBnS' }, //,
             template: { 'shortid': 'BkeIiSXBnS' }, //,
@@ -99,6 +98,7 @@ app.get(`/client`, function(req, res) {
                     { label: 'No piano sound:', y: result.sound.no }
                 ],
 
+                t1Empty: t1Empty,
                 t1Sereis: t1Sereis,
                 t1SerPiChart: [
                     { label: 'With Dolby Tech', y: t1Sereis.DOLBY_AV.yes },
@@ -106,6 +106,7 @@ app.get(`/client`, function(req, res) {
                 ],
                 t1SereisManu: t1SereisManu,
 
+                t2Empty: t2Empty,
                 t2Sereis: t2Sereis,
                 t2SerPiChart: [
                     { label: 'With Dolby Tech', y: t2Sereis.DOLBY_AV.yes },
@@ -113,6 +114,7 @@ app.get(`/client`, function(req, res) {
                 ],
                 t2SereisManu: t2SereisManu,
 
+                t3Empty: t3Empty,
                 t3Sereis: t3Sereis,
                 t3SerPiChart: [
                     { label: 'With Dolby Tech', y: t3Sereis.DOLBY_AV.yes },
@@ -128,7 +130,7 @@ app.get(`/client`, function(req, res) {
             json: data
         };*/
         let options = {
-            uri: 'https://playground.jsreport.net/w/anon/yk_v_ILd/api/report',
+            uri: 'https://playground.jsreport.net/w/anon/YtsnfCM2/api/report',
             //uri: 'https://playground.jsreport.net/w/julius1932/ix4zEU5a/api/report',
             method: 'POST',
             json: data
