@@ -2,7 +2,27 @@ const express = require("express");
 const app = express();
 const gsjson = require('google-spreadsheet-to-json');
 const bodyParser = require('body-parser');
+var cron = require('node-cron');
+const jsonfile = require('jsonfile');
 
+cron.schedule('*/1 * * * *', () => {
+  gsjson({
+        spreadsheetId: '1NWNFnVyMZ10AwnwFeAirC5vQNh2MgORywAfRckUFVPw',
+        // other options...
+    })
+    .then(function(result) {
+        console.log(result.length);
+        jsonfile.writeFile(`data.json`, result, { spaces: 2 }, function(err) {
+            console.error(err);
+
+        });
+
+    })
+    .catch(function(err) {
+        console.log(err.message);
+        console.log(err.stack);
+    });
+});
 app.use(bodyParser.json()); 
 app.use(bodyParser.urlencoded({ extended: false }));
 
