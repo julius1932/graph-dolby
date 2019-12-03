@@ -216,7 +216,7 @@ const HELPERS = {
         delete params.tier1;
         delete params.tier2;
         delete params.tier3;
-        if (params.brandName) {
+       /* if (params.brandName) {
             if (!Array.isArray(params.brandName)) {
                 params.brandName = [params.brandName];
             }
@@ -226,7 +226,8 @@ const HELPERS = {
         }
         if (params.brandName.length == 0) {
             delete params.brandName;
-        }
+        }*/
+        
         let paramsKeys = Object.keys(params);
         paramsKeys = paramsKeys.filter((param) => params[param]);
         console.log(paramsKeys);
@@ -298,7 +299,7 @@ const HELPERS = {
         delete params.tier1;
         delete params.tier2;
         delete params.tier3;
-        if (params.brandName) {
+        /*if (params.brandName) {
             if (!Array.isArray(params.brandName)) {
                 params.brandName = [params.brandName];
             }
@@ -306,10 +307,11 @@ const HELPERS = {
         } else {
             params.brandName = brandName;
         }
+        
         console.log(params);
         if (params.brandName.length == 0) {
             delete params.brandName;
-        }
+        }*/
         let paramsKeys = Object.keys(params);
         paramsKeys = paramsKeys.filter((param) => params[param]);
         //console.log(paramsKeys);
