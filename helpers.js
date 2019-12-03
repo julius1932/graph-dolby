@@ -163,12 +163,12 @@ const HELPERS = {
             key = 'countryOfOrigin';
         }
         //console.log(key);
-        gsjson({
+       /* gsjson({
                 spreadsheetId: '1NWNFnVyMZ10AwnwFeAirC5vQNh2MgORywAfRckUFVPw',
                 // other options...
             })
-            .then(function(result) {
-                console.log
+            .then(function(result) {*/
+                let result =  jsonfile.readFileSync(`data.json`);
                 result = result.map((item) => item[key]);
                 let uniqueArray = result.filter(function(item, pos) {
                     return result.indexOf(item) == pos;
@@ -176,7 +176,7 @@ const HELPERS = {
                 uniqueArray = uniqueArray.sort();
                 //console.log(result);
                 return res.jsonp(uniqueArray);
-            })
+            /*})
             .catch(function(err) {
                 console.log(err.message);
                 console.log(err.stack);
@@ -185,7 +185,7 @@ const HELPERS = {
                     return res.jsonp([]);
                 }
 
-            });
+            });*/
 
     },
     clientsExcel: (req, res) => {
