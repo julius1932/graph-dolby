@@ -30,8 +30,8 @@ const HELPERS = require("./helpers");
 app.set('port', process.env.PORT || 3000);
 
 app.get('/', function(req, res) {
-    //res.sendFile(__dirname + '/graph.html');
-     res.sendFile(__dirname + '/clients.html');
+    res.sendFile(__dirname + '/graph.html');
+    // res.sendFile(__dirname + '/clients.html');
 });
 app.get('/bydist', function(req, res) {
     res.sendFile(__dirname + '/graph-dist.html');
@@ -54,6 +54,7 @@ app.post('/byBrands', function(req, res) {
     return HELPERS.byBrand(res, dists);
 });
 app.get('/dist', function(req, res) {
+    console.log("ioooooo");
     return HELPERS.distList(res);
 });
 //:retailerName?/:location?/:city?/:country?/:brandModel?/:brandName?/:category?/:trademark?/:threeFiles?/:pianoSound?/:distributor?/:countryOfOrigin?
