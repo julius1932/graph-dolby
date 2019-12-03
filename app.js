@@ -233,7 +233,7 @@ app.post('/upload-csv', upload.single('file'), function(req, res) {
             fileRows.push(data); // push each row
         })
         .on("end", function() {
-            console.log(fileRows);
+            //console.log(fileRows);
             jsonfile.writeFileSync(`data.json`, fileRows, { spaces: 2 });
             fs.unlinkSync(req.file.path); // remove temp file
             //process "fileRows" and respond
