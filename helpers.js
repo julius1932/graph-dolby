@@ -41,6 +41,7 @@ const readOrderByBrand = (data, dist) => {
             brand += clean(item.distributor);
         }
         let pPayed = clean(item.pianoSound) || "NO";
+        console.log(pPayed, brand);
         pPayed = pPayed == "NO" || !pPayed.trim() ? 0 : 1;
         let dolbyLogo = clean(item.trademark) || "NO";
         dolbyLogo = dolbyLogo == "NO" || !dolbyLogo.trim() ? 0 : 1;
@@ -63,6 +64,7 @@ const readOrderByBrand = (data, dist) => {
             }
         }
     });
+    console.log(items);
     return items;
 }
 const cleanForChart = function(items, dist) {
@@ -141,7 +143,7 @@ const HELPERS = {
     dataByKey: (req, res) => {
 
         let key = req.params.key || "";
-        // console.log(key);
+        console.log(key);
         if (key == "brandmodel" || key == "brandModel") {
             key = 'brandModel#';
         }
@@ -166,6 +168,7 @@ const HELPERS = {
                 // other options...
             })
             .then(function(result) {
+                console.log
                 result = result.map((item) => item[key]);
                 let uniqueArray = result.filter(function(item, pos) {
                     return result.indexOf(item) == pos;
@@ -273,6 +276,7 @@ const HELPERS = {
                 }
                 data.forEach((item) => {
                     let soP = clean(item.pianoSound);
+                    console.log(soP);
                     switch (soP) {
                         case "HOLIDAY1":
                             sound.holiday1++;
@@ -284,7 +288,9 @@ const HELPERS = {
                             sound.both++;
                             break;
                         case "NO":
+                        case "":
                             sound.no++;
+
                             break;
                     }
 
