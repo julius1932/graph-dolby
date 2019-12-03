@@ -3,14 +3,15 @@ const app = express();
 const gsjson = require('google-spreadsheet-to-json');
 const bodyParser = require('body-parser');
 
-app.use(bodyParser.json());
+app.use(bodyParser.json()); 
 app.use(bodyParser.urlencoded({ extended: false }));
 
 const HELPERS = require("./helpers");
 app.set('port', process.env.PORT || 3000);
 
 app.get('/', function(req, res) {
-    res.sendFile(__dirname + '/graph.html');
+    //res.sendFile(__dirname + '/graph.html');
+     res.sendFile(__dirname + '/clients.html');
 });
 app.get('/bydist', function(req, res) {
     res.sendFile(__dirname + '/graph-dist.html');
@@ -23,11 +24,12 @@ app.get('/data/:key', function(req, res) {
 app.get('/byBrands/:dist?', function(req, res) {
     let dist = req.params.dist || "";
     console.log(req.body);
+     console.log(dist,'pppppppp======----');
     return HELPERS.byBrand(res, dist);
 });
 app.post('/byBrands', function(req, res) {
     let dists = req.body.dists;
-    console.log(dists);
+   
 
     return HELPERS.byBrand(res, dists);
 });

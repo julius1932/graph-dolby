@@ -129,6 +129,18 @@
     });
     $('#excel').click(function() {
         let QRY_STR = "";
+        let tiers = [1, 2, 3];
+        tiers.forEach((i) => {
+            let tier = $('#tier' + i).val();
+            let tr = 'tier' + i;
+            tier.forEach((curTr) => {
+                if (!QRY_STR) {
+                    QRY_STR = tr + "=" + curTr;
+                } else {
+                    QRY_STR += "&" + tr + "=" + curTr;
+                }
+            })
+        });
         const $tableID = $('#table');
         const $rows = $tableID.find('tr:not(:hidden)');
         let headers = ["key", "value"];
@@ -139,6 +151,24 @@
             if ($td.length >= 2) {
                 let key = $td.eq(0).text();
                 let value = $td.eq(1).text();
+                if (key == "brandmodel" || key == "brandModel") {
+                    key = 'brandModel#';
+                }
+                if (key == "retailername" || key == "retailerName") {
+                    key = 'retailerName';
+                }
+                if (key == "brandname" || key == "brandName") {
+                    key = 'brandName';
+                }
+                if (key == "threefiles" || key == "threeFiles") {
+                    key = 'threeFiles';
+                }
+                if (key == "pianosound" || key == "pianoSound") {
+                    key = 'pianoSound';
+                }
+                if (key == "countryoforigin" || key == "countryOfOrigin") {
+                    key = 'countryOfOrigin';
+                }
                 if (key && value) {
                     if (!QRY_STR) {
                         QRY_STR = key + '=' + encodeURI(value);
@@ -148,27 +178,30 @@
                 }
             };
         });
-        //alert(QRY_STR);
-        Adapter.save(QRY_STR, '/clients', function(results) {
-            console.log(results);
-            JSONToCSVConvertor(results, "Data from allv", true);
-        });
+        if (QRY_STR) {
+            Adapter.save(QRY_STR, '/clients', function(results) {
+                console.log(results);
+                JSONToCSVConvertor(results, "Data from allv", true);
+            });
+        } else {
+            alert("Query is empty");
+        }
     });
     $("#pdf").click(function() {
         let QRY_STR = "";
         let tiers = [1, 2, 3];
         tiers.forEach((i) => {
-            let tier = $('#tier'+i).val();
-            let tr='tier'+i;
+            let tier = $('#tier' + i).val();
+            let tr = 'tier' + i;
             tier.forEach((curTr) => {
                 if (!QRY_STR) {
-                    QRY_STR = tr+"=" + curTr;
+                    QRY_STR = tr + "=" + curTr;
                 } else {
-                    QRY_STR += "&"+tr+"=" +curTr;
+                    QRY_STR += "&" + tr + "=" + curTr;
                 }
             })
         });
-        
+
         //alert(QRY_STR);
         const $tableID = $('#table');
         const $rows = $tableID.find('tr:not(:hidden)');
@@ -209,8 +242,13 @@
                 }
             };
         });
-        var win = window.open('/client?' + QRY_STR, '_blank');
-        win.focus();
+        if (QRY_STR) {
+            var win = window.open('/client?' + QRY_STR, '_blank');
+            win.focus();
+        } else {
+            alert("Query is empty")
+        }
+
     });
     $('select#key').change(function() {
         //document.getElementById("select#values").disabled = true;

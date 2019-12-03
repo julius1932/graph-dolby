@@ -41,7 +41,7 @@ const readOrderByBrand = (data, dist) => {
             brand += clean(item.distributor);
         }
         let pPayed = clean(item.pianoSound) || "NO";
-        console.log(pPayed, brand);
+        //console.log(pPayed, brand);
         pPayed = pPayed == "NO" || !pPayed.trim() ? 0 : 1;
         let dolbyLogo = clean(item.trademark) || "NO";
         dolbyLogo = dolbyLogo == "NO" || !dolbyLogo.trim() ? 0 : 1;
@@ -64,7 +64,7 @@ const readOrderByBrand = (data, dist) => {
             }
         }
     });
-    console.log(items);
+    //console.log(items);
     return items;
 }
 const cleanForChart = function(items, dist) {
@@ -103,8 +103,8 @@ const cleanForChart = function(items, dist) {
         }
     }
     let totalModels = items.length;
-    console.log("totalModels");
-    console.log(items.length);
+    //console.log("totalModels");
+    //console.log(items.length);
     items = readOrderByBrand(items, dist);
 
     let categoriesDist = [];
@@ -190,9 +190,40 @@ const HELPERS = {
     },
     clientsExcel: (req, res) => {
         let params = req.body;
+        let brandName = [];
+        let t1 = params.tier1 ;
+        let t2 = params.tier2 ;
+        let t3 = params.tier3;
+        if (t1) {
+            if (!Array.isArray(t1)) {
+                t1 = [t1];
+            }
+            brandName=[...brandName,...t1];
+        }
+        if (t2) {
+            if (!Array.isArray(t2)) {
+                t2 = [t2];
+            }
+            brandName=[...brandName,...t2];
+        }
+        if (t3) {
+            if (!Array.isArray(t3)) {
+                t3 = [t3];
+            }
+            brandName=[...brandName,...t3];
+        }
+
         delete params.tier1;
         delete params.tier2;
         delete params.tier3;
+        if(params.brandName){
+            if (!Array.isArray(params.brandName)) {
+                params.brandName = [params.brandName];
+            }
+            params.brandName = [...params.brandName,...brandName];
+        }else{
+            params.brandName = brandName;
+        }
         let paramsKeys = Object.keys(params);
         paramsKeys = paramsKeys.filter((param) => params[param]);
         console.log(paramsKeys);
@@ -237,9 +268,40 @@ const HELPERS = {
     clients: (req, res, callback) => {
         let params = req.query;
         console.log("=======");
+        let brandName = [];
+        let t1 = params.tier1 ;
+        let t2 = params.tier2 ;
+        let t3 = params.tier3;
+        if (t1) {
+            if (!Array.isArray(t1)) {
+                t1 = [t1];
+            }
+            brandName=[...brandName,...t1];
+        }
+        if (t2) {
+            if (!Array.isArray(t2)) {
+                t2 = [t2];
+            }
+            brandName=[...brandName,...t2];
+        }
+        if (t3) {
+            if (!Array.isArray(t3)) {
+                t3 = [t3];
+            }
+            brandName=[...brandName,...t3];
+        }
+
         delete params.tier1;
         delete params.tier2;
         delete params.tier3;
+        if(params.brandName){
+            if (!Array.isArray(params.brandName)) {
+                params.brandName = [params.brandName];
+            }
+            params.brandName = [...params.brandName,...brandName];
+        }else{
+            params.brandName = brandName;
+        }
         console.log(params);
         let paramsKeys = Object.keys(params);
         paramsKeys = paramsKeys.filter((param) => params[param]);
@@ -276,7 +338,7 @@ const HELPERS = {
                 }
                 data.forEach((item) => {
                     let soP = clean(item.pianoSound);
-                    console.log(soP);
+                    //console.log(soP);
                     switch (soP) {
                         case "HOLIDAY1":
                             sound.holiday1++;
