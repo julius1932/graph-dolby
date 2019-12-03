@@ -4,27 +4,35 @@ const gsjson = require('google-spreadsheet-to-json');
 const bodyParser = require('body-parser');
 var cron = require('node-cron');
 const jsonfile = require('jsonfile');
+const http = require('http');
+const fs = require('fs');
+
+
+const multer = require('multer');
+const csv = require('fast-csv');
+
 
 cron.schedule('*/1 * * * *', () => {
-  /*gsjson({
-        spreadsheetId: '1NWNFnVyMZ10AwnwFeAirC5vQNh2MgORywAfRckUFVPw',
-        // other options...
-    })
-    .then(function(result) {
-        console.log(result.length);
-        jsonfile.writeFile(`data.json`, result, { spaces: 2 }, function(err) {
-            console.error(err);
+    /*gsjson({
+          spreadsheetId: '1NWNFnVyMZ10AwnwFeAirC5vQNh2MgORywAfRckUFVPw',
+          // other options...
+      })
+      .then(function(result) {
+          console.log(result.length);
+          jsonfile.writeFile(`data.json`, result, { spaces: 2 }, function(err) {
+              console.error(err);
 
-        });
+          });
 
-    })
-    .catch(function(err) {
-        console.log(err.message);
-        console.log(err.stack);
-    });*/
+      })
+      .catch(function(err) {
+          console.log(err.message);
+          console.log(err.stack);
+      });*/
 });
-app.use(bodyParser.json()); 
+app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
+const upload = multer({ dest: 'tmp/csv/' });
 
 const HELPERS = require("./helpers");
 app.set('port', process.env.PORT || 3000);
@@ -44,12 +52,12 @@ app.get('/data/:key', function(req, res) {
 app.get('/byBrands/:dist?', function(req, res) {
     let dist = req.params.dist || "";
     console.log(req.body);
-     console.log(dist,'pppppppp======----');
+    console.log(dist, 'pppppppp======----');
     return HELPERS.byBrand(res, dist);
 });
 app.post('/byBrands', function(req, res) {
     let dists = req.body.dists;
-   
+
 
     return HELPERS.byBrand(res, dists);
 });
@@ -71,15 +79,15 @@ app.get(`/client`, function(req, res) {
     let t2 = params.tier2 || [];
     let t3 = params.tier3 || [];
 
-    
+
 
     if (!Array.isArray(t1)) {
         t1 = [t1];
     }
     if (!Array.isArray(t2)) {
-        let temp=t2;
+        let temp = t2;
         console.log("ooooooooooooooooooooooopppppiiiiiiiiiiiiiiiiii ", temp);
-        
+
         t2 = [temp];
     }
     if (!Array.isArray(t3)) {
@@ -213,5 +221,23 @@ const clean = (str) => {
 
     return str;
 }
+app.get('/upload-csv', function(req, res) {
+    res.sendFile(__dirname + '/upload.html');
+});
 
+app.post('/upload-csv', upload.single('file'), function(req, res) {
+    const fileRows = [];
+    // open uploaded file
+    csv.fromPath(req.file.path,{headers: true})
+        .on("data", function(data) {
+            fileRows.push(data); // push each row
+        })
+        .on("end", function() {
+            console.log(fileRows);
+            jsonfile.writeFileSync(`data.json`, fileRows, { spaces: 2 });
+            fs.unlinkSync(req.file.path); // remove temp file
+            //process "fileRows" and respond
+           res.sendFile(__dirname + '/success.html');
+        })
+});
 module.exports = app;
