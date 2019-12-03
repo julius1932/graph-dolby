@@ -6,7 +6,7 @@ var cron = require('node-cron');
 const jsonfile = require('jsonfile');
 
 cron.schedule('*/1 * * * *', () => {
-  gsjson({
+  /*gsjson({
         spreadsheetId: '1NWNFnVyMZ10AwnwFeAirC5vQNh2MgORywAfRckUFVPw',
         // other options...
     })
@@ -21,7 +21,7 @@ cron.schedule('*/1 * * * *', () => {
     .catch(function(err) {
         console.log(err.message);
         console.log(err.stack);
-    });
+    });*/
 });
 app.use(bodyParser.json()); 
 app.use(bodyParser.urlencoded({ extended: false }));
