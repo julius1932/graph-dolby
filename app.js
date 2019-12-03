@@ -230,7 +230,7 @@ app.post('/upload-csv', upload.single('file'), function(req, res) {
     // open uploaded file
     csv.fromPath(req.file.path,{headers: true})
         .on("data", function(data) {
-            fileRows.push(data); // push each row
+            fileRows.push(adjust(data)); // push each row
         })
         .on("end", function() {
             //console.log(fileRows);
@@ -240,4 +240,28 @@ app.post('/upload-csv', upload.single('file'), function(req, res) {
            res.sendFile(__dirname + '/success.html');
         })
 });
+function adjust(data){
+   let item ={
+    "retailerName": data["Retailer Name"],
+    "location":  data["Location"],
+    "city":  data["City"],
+    "state":  data["State"],
+    "country":  data["Country"],
+    "region":  data["Region"],
+    "activityStartDate":  data["Activity Start Date"],
+    "activityEndDate":  data["Activity End Date"],
+    "brandModel#":  data["Brand Model #"],
+    "brandName":  data["Brand Name"],
+    "category":  data["Category"],
+    "trademark": data["Trademark"],
+    "threeFiles":  data["Three Files"],
+    "pianoSound":  data["Piano Sound"],
+    "distributor": data["Distributor"],
+    "countryOfOrigin": data["Country of Origin"],
+    "manufactureDate": data["Manufacture Date"],
+    "price":  data["Price"],
+    "evidence":  data["Evidence"]
+  }
+  return item;
+}
 module.exports = app;
