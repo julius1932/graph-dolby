@@ -227,12 +227,13 @@ const HELPERS = {
         let paramsKeys = Object.keys(params);
         paramsKeys = paramsKeys.filter((param) => params[param]);
         console.log(paramsKeys);
-        gsjson({
+        /*gsjson({
                 spreadsheetId: '1NWNFnVyMZ10AwnwFeAirC5vQNh2MgORywAfRckUFVPw',
                 // other options...
             })
-            .then(function(result) {
+            .then(function(result) {*/
                 //console.log(result.length);
+                let result =  jsonfile.readFileSync(`data.json`);
                 let data = result.filter((itm) => {
                     let test = true;
                     for (let i = 0; i < paramsKeys.length; i++) {
@@ -253,7 +254,7 @@ const HELPERS = {
                 });
                 //console.log(data);
                 return res.jsonp(data);
-            })
+           /* })
             .catch(function(err) {
                 console.log(err.message);
                 console.log(err.stack);
@@ -262,7 +263,7 @@ const HELPERS = {
                     return res.jsonp([]);
                 }
 
-            });
+            });*/
 
     },
     clients: (req, res, callback) => {
@@ -306,11 +307,12 @@ const HELPERS = {
         let paramsKeys = Object.keys(params);
         paramsKeys = paramsKeys.filter((param) => params[param]);
         //console.log(paramsKeys);
-        gsjson({
+        /*gsjson({
                 spreadsheetId: '1NWNFnVyMZ10AwnwFeAirC5vQNh2MgORywAfRckUFVPw',
                 // other options...
             })
-            .then(function(result) {
+            .then(function(result) {*/
+                let result =  jsonfile.readFileSync(`data.json`);
                 console.log(result.length);
                 let data = result.filter((itm) => {
                     let test = true;
@@ -361,7 +363,7 @@ const HELPERS = {
                     all: data,
                     sound: sound
                 });
-
+/*
             })
             .catch(function(err) {
                 console.log(err.message);
@@ -371,23 +373,24 @@ const HELPERS = {
                     return {};
                 }
 
-            });
+            });*/
 
     },
     byBrand: (res, dist) => {
 
-        gsjson({
+       /* gsjson({
                 spreadsheetId: '1NWNFnVyMZ10AwnwFeAirC5vQNh2MgORywAfRckUFVPw',
                 // other options...
             })
-            .then(function(result) {
+            .then(function(result) {*/
+                let result =  jsonfile.readFileSync(`data.json`);
                 console.log(result.length);
                 /*jsonfile.writeFile(`result.json`, result, { spaces: 2 }, function(err) {
                     console.error(err);
                 });*/
                 let data = cleanForChart(result, dist);
                 return res.jsonp(data);
-            })
+            /*})
             .catch(function(err) {
                 console.log(err.message);
                 console.log(err.stack);
@@ -396,28 +399,29 @@ const HELPERS = {
                     return res.jsonp([]);
                 }
 
-            });
+            });*/
 
     },
     distList: (res) => {
-
+/*
         gsjson({
                 spreadsheetId: '1NWNFnVyMZ10AwnwFeAirC5vQNh2MgORywAfRckUFVPw',
                 // other options...
             })
-            .then(function(result) {
+            .then(function(result) {*/
+                let result =  jsonfile.readFileSync(`data.json`);
                 console.log(result.length);
                 let data = readOrderByDist(result);
                 return res.jsonp(data);
 
-            })
+           /* })
             .catch(function(err) {
                 console.log(err.message);
                 console.log(err.stack);
                 //let items = jsonfile.readFileSync(`./data.json`);
                 //let data = readOrderByDist(items);
                 return res.jsonp([]);
-            });
+            });*/
 
     },
     cleanForChart: cleanForChart
