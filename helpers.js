@@ -141,6 +141,7 @@ const cleanForChart = function(items, dist, bars) {
     obItem.color = [];
     if (!bars || bars.length == 0) {
         obItem.series = [series.models, series.pio, series.tm];
+        obItem.color=['#7cb5ec', '#ffa500', '#07023d'];
     } else {
         let arrr = [];
         if (bars.includes("models")) {
