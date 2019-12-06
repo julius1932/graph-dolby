@@ -79,8 +79,15 @@ app.get(`/client`, function(req, res) {
     let t2 = params.tier2 || [];
     let t3 = params.tier3 || [];
 
-
-
+    let bars = params.bars || [];
+    if (!Array.isArray(bars)) {
+        bars = [bars];
+    }
+    if (bars.length > 0) {
+        bars.unshift("models");
+    }
+    delete params.bars;
+    console.log(bars);
     if (!Array.isArray(t1)) {
         t1 = [t1];
     }
@@ -102,16 +109,16 @@ app.get(`/client`, function(req, res) {
 
         let t1Data = result.all.filter((item) => t1.includes(clean(item.brandName)));
 
-        let t1Sereis = HELPERS.cleanForChart(t1Data, "");
-        let t1SereisManu = HELPERS.cleanForChart(t1Data, []);
+        let t1Sereis = HELPERS.cleanForChart(t1Data, "", bars);
+        let t1SereisManu = HELPERS.cleanForChart(t1Data, [], bars);
 
         let t2Data = result.all.filter((item) => t2.includes(clean(item.brandName)));
-        let t2Sereis = HELPERS.cleanForChart(t2Data, "");
-        let t2SereisManu = HELPERS.cleanForChart(t2Data, []);
+        let t2Sereis = HELPERS.cleanForChart(t2Data, "", bars);
+        let t2SereisManu = HELPERS.cleanForChart(t2Data, [], bars);
 
         let t3Data = result.all.filter((item) => t3.includes(clean(item.brandName)));
-        let t3Sereis = HELPERS.cleanForChart(t3Data, "");
-        let t3SereisManu = HELPERS.cleanForChart(t3Data, []);
+        let t3Sereis = HELPERS.cleanForChart(t3Data, "", bars);
+        let t3SereisManu = HELPERS.cleanForChart(t3Data, [], bars);
 
         let t1Empty = (t1.length != 0);
         let t2Empty = (t2.length != 0);
@@ -161,8 +168,8 @@ app.get(`/client`, function(req, res) {
             json: data
         };*/
         let options = {
-            uri: 'https://playground.jsreport.net/w/anon/YtsnfCM2/api/report',
-            //uri: 'https://playground.jsreport.net/w/julius1932/ix4zEU5a/api/report',
+            //uri: 'https://playground.jsreport.net/w/anon/YtsnfCM2/api/report',
+            uri: 'https://playground.jsreport.net/w/anon/EZyyU1li/api/report',
             method: 'POST',
             json: data
         };
@@ -228,7 +235,7 @@ app.get('/upload-csv', function(req, res) {
 app.post('/upload-csv', upload.single('file'), function(req, res) {
     const fileRows = [];
     // open uploaded file
-    csv.fromPath(req.file.path,{headers: true})
+    csv.fromPath(req.file.path, { headers: true })
         .on("data", function(data) {
             fileRows.push(adjust(data)); // push each row
         })
@@ -237,31 +244,32 @@ app.post('/upload-csv', upload.single('file'), function(req, res) {
             jsonfile.writeFileSync(`data.json`, fileRows, { spaces: 2 });
             fs.unlinkSync(req.file.path); // remove temp file
             //process "fileRows" and respond
-           res.sendFile(__dirname + '/success.html');
+            res.sendFile(__dirname + '/success.html');
         })
 });
-function adjust(data){
-   let item ={
-    "retailerName": data["Retailer Name"],
-    "location":  data["Location"],
-    "city":  data["City"],
-    "state":  data["State"],
-    "country":  data["Country"],
-    "region":  data["Region"],
-    "activityStartDate":  data["Activity Start Date"],
-    "activityEndDate":  data["Activity End Date"],
-    "brandModel#":  data["Brand Model #"],
-    "brandName":  data["Brand Name"],
-    "category":  data["Category"],
-    "trademark": data["Trademark"],
-    "threeFiles":  data["Three Files"],
-    "pianoSound":  data["Piano Sound"],
-    "distributor": data["Distributor"],
-    "countryOfOrigin": data["Country of Origin"],
-    "manufactureDate": data["Manufacture Date"],
-    "price":  data["Price"],
-    "evidence":  data["Evidence"]
-  }
-  return item;
+
+function adjust(data) {
+    let item = {
+        "retailerName": data["Retailer Name"],
+        "location": data["Location"],
+        "city": data["City"],
+        "state": data["State"],
+        "country": data["Country"],
+        "region": data["Region"],
+        "activityStartDate": data["Activity Start Date"],
+        "activityEndDate": data["Activity End Date"],
+        "brandModel#": data["Brand Model #"],
+        "brandName": data["Brand Name"],
+        "category": data["Category"],
+        "trademark": data["Trademark"],
+        "threeFiles": data["Three Files"],
+        "pianoSound": data["Piano Sound"],
+        "distributor": data["Distributor"],
+        "countryOfOrigin": data["Country of Origin"],
+        "manufactureDate": data["Manufacture Date"],
+        "price": data["Price"],
+        "evidence": data["Evidence"]
+    }
+    return item;
 }
 module.exports = app;

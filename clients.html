@@ -91,6 +91,11 @@
     </select>
     Tier 3
     <select id="tier3" name="tier3" multiple>
+    </select> </br> </br>
+    Bars
+    <select id="bars" name="bars" multiple>
+        <option value="pio">Piano Played</option>
+        <option value="tm">Dolby Logo</option>
     </select> </br>
     </div>
     <form action="/clients" method="post" id="qry-form-post">
@@ -99,7 +104,7 @@
         <button type="button" id='excel'>Excel Sheet</button>
     </form>
     <script>
-    $('select').selectize({});
+    $('select').selectize({ plugins: ['remove_button'] });
     let currValues = [];
     init('retailername', "values");
 
@@ -201,7 +206,14 @@
                 }
             })
         });
-
+        let bars = $('#bars').val();
+        bars.forEach((bar) => {
+            if (!QRY_STR) {
+                QRY_STR = "bars=" + bar;
+            } else {
+                QRY_STR += "&bars=" + bar;
+            }
+        })
         //alert(QRY_STR);
         const $tableID = $('#table');
         const $rows = $tableID.find('tr:not(:hidden)');

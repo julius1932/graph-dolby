@@ -67,7 +67,7 @@ const readOrderByBrand = (data, dist) => {
     //console.log(items);
     return items;
 }
-const cleanForChart = function(items, dist) {
+const cleanForChart = function(items, dist, bars) {
     //console.log("items.length");
     //console.log(items.length);
     let series = {
@@ -136,7 +136,28 @@ const cleanForChart = function(items, dist) {
     if (dist) {
         categories = categoriesDist;
     }
-    return { categories, series: [series.models, series.pio, series.tm], dist: dist, DOLBY_AV: DOLBY_AV, brandsWithDolby: brandsWithDolby, brandsWithOutDolby: brandsWithOutDolby };
+    let obItem = { categories, dist: dist, DOLBY_AV: DOLBY_AV, brandsWithDolby: brandsWithDolby, brandsWithOutDolby: brandsWithOutDolby };
+    //obItem.color=['#7cb5ec', '#ffa500', '#07023d'],
+    obItem.color = [];
+    if (!bars || bars.length == 0) {
+        obItem.series = [series.models, series.pio, series.tm];
+    } else {
+        let arrr = [];
+        if (bars.includes("models")) {
+            arrr.push(series.models);
+            obItem.color.push('#7cb5ec');
+        }
+        if (bars.includes("pio")) {
+            arrr.push(series.pio);
+            obItem.color.push('#ffa500');
+        }
+        if (bars.includes("tm")) {
+            arrr.push(series.tm);
+            obItem.color.push('#07023d');
+        }
+        obItem.series = arrr;
+    }
+    return obItem;
 }
 
 const HELPERS = {
@@ -216,18 +237,18 @@ const HELPERS = {
         delete params.tier1;
         delete params.tier2;
         delete params.tier3;
-       /* if (params.brandName) {
-            if (!Array.isArray(params.brandName)) {
-                params.brandName = [params.brandName];
-            }
-            params.brandName = [...params.brandName, ...brandName];
-        } else {
-            params.brandName = brandName;
-        }
-        if (params.brandName.length == 0) {
-            delete params.brandName;
-        }*/
-        
+        /* if (params.brandName) {
+             if (!Array.isArray(params.brandName)) {
+                 params.brandName = [params.brandName];
+             }
+             params.brandName = [...params.brandName, ...brandName];
+         } else {
+             params.brandName = brandName;
+         }
+         if (params.brandName.length == 0) {
+             delete params.brandName;
+         }*/
+
         let paramsKeys = Object.keys(params);
         paramsKeys = paramsKeys.filter((param) => params[param]);
         console.log(paramsKeys);
