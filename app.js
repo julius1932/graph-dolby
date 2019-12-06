@@ -83,9 +83,9 @@ app.get(`/client`, function(req, res) {
     if (!Array.isArray(bars)) {
         bars = [bars];
     }
-    if (bars.length > 0) {
+    /*if (bars.length > 0) {
         bars.unshift("models");
-    }
+    }*/
     delete params.bars;
     console.log(bars);
     if (!Array.isArray(t1)) {
