@@ -1,3 +1,6 @@
+<!DOCTYPE html>
+<html>
+<head>
 <style type="text/css">
 .highcharts-figure,
 .highcharts-data-table table {
@@ -45,12 +48,50 @@
 .highcharts-data-table tr:hover {
     background: #f1f7ff;
 }
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid #e7e7e7;
+  background-color: #f3f3f3;
+}
+
+li {
+  float: left;
+}
+
+li a {
+  display: block;
+  color: #666;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+
+li a:hover:not(.active) {
+  background-color: #ddd;
+}
+
+li a.active {
+  color: white;
+  background-color: #4CAF50;
+}
 </style>
 <script src="https://code.highcharts.com/highcharts.js"></script>
 <script src="https://code.highcharts.com/modules/exporting.js"></script>
 <script src="https://code.highcharts.com/modules/export-data.js"></script>
 <script src="https://code.highcharts.com/modules/accessibility.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+</head>
+<body>
+
+<ul>
+  <li><a  href="/"> All By Model</a></li>
+  <li><a href="/bydist">All By Distributor</a></li>
+  <li><a href="/clients">Query Based Analytics</a></li>
+  <li><a href="/upload-csv">Upload New Sheet</a></li>
+</ul>
 <figure class="highcharts-figure">
     <div id="container"></div>
     <p class="highcharts-description">
@@ -140,3 +181,5 @@ Adapter.read('/bybrands', function(results) {
     });
 });
 </script>
+</body>
+</html>
