@@ -169,7 +169,7 @@ app.get(`/client`, function(req, res) {
         };*/
         let options = {
             //uri: 'https://playground.jsreport.net/w/anon/YtsnfCM2/api/report',
-            uri: 'https://playground.jsreport.net/w/anon/EZyyU1li/api/report',
+            uri: 'https://playground.jsreport.net/w/anon/exIUKNsN/api/report',
             method: 'POST',
             json: data
         };
