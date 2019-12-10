@@ -56,6 +56,9 @@ ul {
   overflow: hidden;
   border: 1px solid #e7e7e7;
   background-color: #f3f3f3;
+  position: -webkit-sticky; /* Safari & IE */
+position: sticky;
+top: 0;
 }
 
 li {
@@ -94,6 +97,7 @@ li a.active {
   <li><a  href="/"> All By Model</a></li>
   <li><a href="/bydist">All By Distributor</a></li>
   <li><a href="/clients">Query Based Analytics</a></li>
+   <li><a href="/retailer">Analytics By Retailer</a></li>
   <li><a href="/upload-csv">Upload New Sheet</a></li>
 </ul>
 
@@ -220,9 +224,9 @@ li a.active {
                 }
                 if (key && value) {
                     if (!QRY_STR) {
-                        QRY_STR = key + '=' + encodeURI(value);
+                        QRY_STR = key + '=' + encodeURI(removeAmpsend(value));
                     } else {
-                        QRY_STR += '&' + key + '=' + encodeURI(value);
+                        QRY_STR += '&' + key + '=' + encodeURI(removeAmpsend(value));
                     }
                 }
             };
@@ -291,9 +295,9 @@ li a.active {
                 }
                 if (key && value) {
                     if (!QRY_STR) {
-                        QRY_STR = key + '=' + encodeURI(value);
+                        QRY_STR = key + '=' + encodeURI(removeAmpsend(value));
                     } else {
-                        QRY_STR += '&' + key + '=' + encodeURI(value);
+                        QRY_STR += '&' + key + '=' + encodeURI(removeAmpsend(value));
                     }
                 }
             };
@@ -349,7 +353,9 @@ li a.active {
 
         });
     }
-
+    function removeAmpsend(str){
+        return str.split("&").join("");
+    }
     function init(key, id) {
         var selectize = $("select#" + id)[0].selectize;
         selectize.clear();
