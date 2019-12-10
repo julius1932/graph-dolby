@@ -11,8 +11,10 @@ const clean = (str) => {
         str = str.split(".").join("");
         str = str.split(",").join("");
         str = str.split("-").join("");
-        str = str.split(" ").join("");
         str = str.split("/").join("");
+        str = str.split("&").join("");
+        str = str.split(" ").join("");
+        str = str.split('\"').join("");
     }
 
     return str;
@@ -29,7 +31,18 @@ const readOrderByDist = (data) => {
             items[distributor] = item.distributor || "No distributor";
         }
     });
-    return Object.values(items);
+    let result = Object.values(items);
+    result = result.map((item) => item.split('\"').join(""));
+    let tempClean = [];
+    let uniqueArray = result.filter(function(item, pos) {
+        if (tempClean.includes(clean(item))) {
+            return false;
+        } else {
+            tempClean.push(clean(item));
+            return true;
+        }
+    })
+    return uniqueArray;
 }
 const readOrderByBrand = (data, dist) => {
     let items = {};
@@ -66,6 +79,131 @@ const readOrderByBrand = (data, dist) => {
     });
     //console.log(items);
     return items;
+}
+const readOrderByRetailer = (data, graph) => {
+    let items = {};
+    console.log(data.length);
+
+    data.forEach(function(item) {
+        let brandLab = "";
+        let brand = item.retailerName;
+        switch (graph) {
+            case "retailername":
+                brand = item["retailerName"];
+                brandLab = brand;
+                //console.log( graph,b);
+                break;
+            case "category":
+                brand = item["category"];
+                brandLab = brand;
+                break;
+            case "retailercategory":
+                brand = item["retailerName"] + item["category"];
+                brandLab = item["retailerName"] + " : " + item["category"];
+                break;
+        }
+
+        let pPayed = clean(item.pianoSound) || "NO";
+        //console.log(pPayed, brand);
+        pPayed = pPayed == "NO" || !pPayed.trim() ? 0 : 1;
+        let dolbyLogo = clean(item.trademark) || "NO";
+        dolbyLogo = dolbyLogo == "NO" || !dolbyLogo.trim() ? 0 : 1;
+        brand=clean(brand);
+        if (items[brand]) {
+            items[brand].models += 1;
+            items[brand].pianoPlayed += pPayed;
+            items[brand].dolbyLogo += dolbyLogo;
+        } else {
+            items[brand] = {
+                brand: brandLab,
+                models: 1,
+                pianoPlayed: pPayed,
+                dolbyLogo: dolbyLogo
+            }
+        }
+    });
+    //console.log(items);
+    return items;
+}
+const cleanForChartRetailer = function(items, graph, bars) {
+    //console.log("items.length");
+    //console.log(items.length);
+    let series = {
+        models: {
+            name: "Models",
+            data: []
+        },
+        pio: {
+            name: "Piano Played",
+            data: []
+        },
+        tm: {
+            name: "Dolby Logo",
+            data: []
+        },
+    };
+    console.log("ppppppppppppppppppppppppppp");
+
+    let totalModels = items.length;
+    //console.log("totalModels");
+    //console.log(items.length);
+    items = readOrderByRetailer(items, graph);
+
+    let categoriesDist = [];
+    let categories = Object.keys(items);
+
+    let data = Object.values(items);
+
+    let DOLBY_AV = {
+        yes: 0,
+        no: 0
+    }
+    let brandsWithDolby = [];
+    let brandsWithOutDolby = [];
+    data.sort((a, b) => {
+        if (a.models > b.models) return -1;
+        if (b.models > a.models) return 1;
+    });
+    data.forEach((item) => {
+        DOLBY_AV.yes += item.dolbyLogo;
+        categoriesDist.push(item.brand);
+        series.models.data.push(item.models);
+        series.pio.data.push(item.pianoPlayed);
+        series.tm.data.push(item.dolbyLogo);
+        if (item.dolbyLogo > 0) {
+            brandsWithDolby.push(item.brand);
+        } else {
+            brandsWithOutDolby.push(item.brand);
+        }
+    });
+    DOLBY_AV.no = totalModels - DOLBY_AV.yes;
+    if (graph) {
+        categories = categoriesDist;
+    }
+    let obItem = { categories, DOLBY_AV: DOLBY_AV, brandsWithDolby: brandsWithDolby, brandsWithOutDolby: brandsWithOutDolby };
+    //obItem.color=['#7cb5ec', '#ffa500', '#07023d'],
+    obItem.color = [];
+    if (!bars || bars.length == 0) {
+        obItem.series = [series.models, series.pio, series.tm];
+        obItem.color = ['#7cb5ec', '#ffa500', '#07023d'];
+    } else {
+        let arrr = [];
+        if (bars.includes("models")) {
+            arrr.push(series.models);
+            obItem.color.push('#7cb5ec');
+        }
+        if (bars.includes("pio")) {
+            arrr.push(series.pio);
+            obItem.color.push('#ffa500');
+        }
+        if (bars.includes("tm")) {
+            arrr.push(series.tm);
+            obItem.color.push('#07023d');
+        }
+        obItem.series = arrr;
+    }
+    //console.log(items);
+    return obItem;
 }
 const cleanForChart = function(items, dist, bars) {
     //console.log("items.length");
@@ -120,6 +258,10 @@ const cleanForChart = function(items, dist, bars) {
     }
     let brandsWithDolby = [];
     let brandsWithOutDolby = [];
+    data.sort((a, b) => {
+        if (a.models > b.models) return -1;
+        if (b.models > a.models) return 1;
+    });
     data.forEach((item) => {
         DOLBY_AV.yes += item.dolbyLogo;
         categoriesDist.push(item.brand);
@@ -141,7 +283,7 @@ const cleanForChart = function(items, dist, bars) {
     obItem.color = [];
     if (!bars || bars.length == 0) {
         obItem.series = [series.models, series.pio, series.tm];
-        obItem.color=['#7cb5ec', '#ffa500', '#07023d'];
+        obItem.color = ['#7cb5ec', '#ffa500', '#07023d'];
     } else {
         let arrr = [];
         if (bars.includes("models")) {
@@ -192,8 +334,15 @@ const HELPERS = {
              .then(function(result) {*/
         let result = jsonfile.readFileSync(`data.json`);
         result = result.map((item) => item[key]);
+        result = result.map((item) => item.split('\"').join(""));
+        let tempClean = [];
         let uniqueArray = result.filter(function(item, pos) {
-            return result.indexOf(item) == pos;
+            if (tempClean.includes(clean(item))) {
+                return false;
+            } else {
+                tempClean.push(clean(item));
+                return true;
+            }
         })
         uniqueArray = uniqueArray.sort();
         //console.log(result);
@@ -405,6 +554,32 @@ const HELPERS = {
 
                     });*/
 
+    },
+    byRetailer: (res, params) => {
+        let result = jsonfile.readFileSync(`data.json`);
+        console.log(result.length);
+        if (params.retailer) {
+            if (!Array.isArray(params.retailer)) {
+                params.retailer = [params.retailer];
+            }
+            let retailers = params.retailer;
+            retailers = retailers.map((item) => clean(item));
+            result = result.filter(function(item, pos) {
+                return retailers.includes(clean(item.retailerName));
+            });
+            console.log(result.length);
+        }
+        let graph = "retailername";
+        let bars = "";
+        if (params.graph) {
+            graph = params.graph;
+        }
+        if (params.bars) {
+            bars = params.bars;
+        }
+        let data = cleanForChartRetailer(result, graph, bars);
+        console.log(data);
+        return res.jsonp(data);
     },
     byBrand: (res, dist) => {
 

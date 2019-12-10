@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <style type="text/css">
+    .highcharts-figure,
+    .highcharts-data-table table {
+        min-width: 310px;
+        max-width: 800px;
+        margin: 1em auto;
+    }
+
+    #container {
+        height: auto;
+    }
+
+    .highcharts-data-table table {
+        font-family: Verdana, sans-serif;
+        border-collapse: collapse;
+        border: 1px solid #EBEBEB;
+        margin: 10px auto;
+        text-align: center;
+        width: 100%;
+        max-width: 500px;
+    }
+
+    .highcharts-data-table caption {
+        padding: 1em 0;
+        font-size: 1.2em;
+        color: #555;
+    }
+
+    .highcharts-data-table th {
+        font-weight: 600;
+        padding: 0.5em;
+    }
+
+    .highcharts-data-table td,
+    .highcharts-data-table th,
+    .highcharts-data-table caption {
+        padding: 0.5em;
+    }
+
+    .highcharts-data-table thead tr,
+    .highcharts-data-table tr:nth-child(even) {
+        background: #f8f8f8;
+    }
+
+    .highcharts-data-table tr:hover {
+        background: #f1f7ff;
+    }
+
+    div.sticky {
+        position: -webkit-sticky;
+        position: sticky;
+        top: 0;
+        background-color: yellow;
+
+
+    }
+
+    ul {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        border: 1px solid #e7e7e7;
+        background-color: #f3f3f3;
+
+    }
+
+    li {
+        float: left;
+    }
+
+    li a {
+        display: block;
+        color: #666;
+        text-align: center;
+        padding: 14px 16px;
+        text-decoration: none;
+    }
+
+    li a:hover:not(.active) {
+        background-color: #ddd;
+    }
+
+    li a.active {
+        color: white;
+        background-color: #4CAF50;
+    }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.8.5/css/selectize.default.css">
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script src="https://code.highcharts.com/modules/export-data.js"></script>
+    <script src="https://code.highcharts.com/modules/accessibility.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.8.5/js/standalone/selectize.min.js"></script>
+</head>
+
+<body>
+    <ul>
+        <li><a href="/"> All By Model</a></li>
+        <li><a href="/bydist">All By Distributor</a></li>
+        <li><a href="/clients">Query Based Analytics</a></li>
+        <li><a href="/retailer">Analytics By Retailer</a></li>
+        <li><a href="/upload-csv">Upload New Sheet</a></li>
+    </ul>
+    <figure class="highcharts-figure">
+        <form id="retailer-form">
+            Analytic Type
+            <select id="graph" name="graph">
+                <option value="retailername">Models By Retailer</option>
+                <option value="category">By Categories </option>
+                <option value="retailercategory">Categories by Retailer </option>
+            </select> </br>
+            Retailer
+            <select id="retailer" name="retailer" multiple>
+            </select></br>
+            Fields to show on graph
+            <select id="bars" name="bars" multiple>
+                <option value="models">Models</option>
+                <option value="pio">Piano Played</option>
+                <option value="tm">Dolby Logo</option>
+            </select> </br>
+            <input type="submit" value="Show">
+        </form>
+        <div id="container">
+        </div>
+        <p class="highcharts-description">
+        </p>
+    </figure>
+    <script>
+    $('select').selectize({ plugins: ['remove_button'] });
+    init('retailername', "retailer");
+    const Adapter = {
+        read: (theUrl, callback) => {
+            $.ajax({
+                url: theUrl,
+                dataType: 'jsonp',
+                success: callback
+            });
+        }
+    }
+    showGraph("");
+$("#retailer-form").submit(function(event) {
+    event.preventDefault();
+    var qry = $(this).serialize();
+     //alert(qry); 
+    showGraph("?"+qry);
+});
+    function showGraph(qry) {
+        Adapter.read('/byRetailer' + qry, function(results) {
+            console.log(results);
+            let numCate = results.categories.length;
+            let divHeight = numCate / 5 * 400;
+            if (divHeight >= 400) {
+                $('#container').css('height', divHeight + 'px');
+            } else {
+                $('#container').css('height', 'auto');
+            }
+
+            Highcharts.chart('container', {
+                'plotOptions': {
+                    'column': {
+                        'colorByPoint': true //need to become true for color bar.
+                    }
+                },
+                //you can list color at here or with series both are valid
+                'colors': ['#7cb5ec', '#ffa500', '#07023d'],
+                chart: {
+                    type: 'bar'
+                },
+                title: {
+                    text: 'DD India data - DO11SEP2019-881 Analysis'
+                },
+                subtitle: {
+                    text: 'Source: <a href="https://docs.google.com/spreadsheets/d/1NWNFnVyMZ10AwnwFeAirC5vQNh2MgORywAfRckUFVPw/edit#gid=0">Google Sheet</a>'
+                },
+                xAxis: {
+                    //categories: ['Africa', 'America', 'Asia', 'Europe', 'Oceania'],
+                    categories: results.categories,
+
+                    title: {
+                        text: null
+                    }
+                },
+                yAxis: {
+                    tickInterval: 1,
+                    min: 0,
+                    title: {
+                        text: 'Number (Quantity)',
+                        align: 'high'
+                    },
+                    labels: {
+                        overflow: 'justify'
+                    }
+                },
+                tooltip: {
+                    valueSuffix: ''
+                },
+                plotOptions: {
+                    bar: {
+                        dataLabels: {
+                            enabled: true
+                        }
+                    }
+                },
+                legend: {
+                    layout: 'vertical',
+                    align: 'right',
+                    verticalAlign: 'top',
+                    x: -40,
+                    y: 80,
+                    floating: false,
+                    borderWidth: 1,
+                    backgroundColor: Highcharts.defaultOptions.legend.backgroundColor || '#FFFFFF',
+                    shadow: true
+                },
+                credits: {
+                    enabled: false
+                },
+                "series": results.series
+            });
+        });
+    }
+
+    function init(key, id) {
+        var selectize = $("select#" + id)[0].selectize;
+        selectize.clear();
+        selectize.clearOptions();
+        $.getJSON("/data/" + key, function(data) {
+            console.log(data);
+            currValues = data;
+            var options = [];
+            for (var i = 0; i < data.length; i++) {
+                options.push({ text: data[i], value: data[i] });
+            }
+            selectize.load(function(callback) {
+                callback(options);
+            });
+
+        });
+    }
+    </script>
+</body>
+
+</html>

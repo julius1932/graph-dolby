@@ -90,6 +90,7 @@ li a.active {
   <li><a  href="/"> All By Model</a></li>
   <li><a href="/bydist">All By Distributor</a></li>
   <li><a href="/clients">Query Based Analytics</a></li>
+  <li><a href="/retailer">Analytics By Retailer</a></li>
   <li><a href="/upload-csv">Upload New Sheet</a></li>
 </ul>
 <figure class="highcharts-figure">
@@ -140,7 +141,7 @@ Adapter.read('/dist', function(results) {
 $(".dist-from").submit(function(event) {
     event.preventDefault();
     var qry = $(this).serialize();
-    // alert(qry); 
+     //alert(qry); 
     showGraph(qry);
 });
 

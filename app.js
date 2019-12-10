@@ -72,6 +72,15 @@ app.get(`/clients`, function(req, res) {
 app.post(`/clients`, function(req, res) {
     return HELPERS.clientsExcel(req, res);
 });
+app.get(`/retailer`, function(req, res) {
+     res.sendFile(__dirname + '/retailer.html'); 
+});
+app.get(`/byRetailer`, function(req, res) {
+    let param = req.query;
+    
+    console.log(param);
+    return HELPERS.byRetailer(res,param);
+});
 app.get(`/client`, function(req, res) {
     let params = req.query;
     console.log(params);
@@ -224,6 +233,8 @@ const clean = (str) => {
         str = str.split("-").join("");
         str = str.split(" ").join("");
         str = str.split("/").join("");
+        str = str.split("&").join("");
+        str = str.split('\"').join("");
     }
 
     return str;
