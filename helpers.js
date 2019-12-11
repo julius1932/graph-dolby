@@ -108,7 +108,7 @@ const readOrderByRetailer = (data, graph) => {
         pPayed = pPayed == "NO" || !pPayed.trim() ? 0 : 1;
         let dolbyLogo = clean(item.trademark) || "NO";
         dolbyLogo = dolbyLogo == "NO" || !dolbyLogo.trim() ? 0 : 1;
-        brand=clean(brand);
+        brand = clean(brand);
         if (items[brand]) {
             items[brand].models += 1;
             items[brand].pianoPlayed += pPayed;
@@ -150,7 +150,8 @@ const cleanForChartRetailer = function(items, graph, bars) {
     items = readOrderByRetailer(items, graph);
 
     let categoriesDist = [];
-    let categories = Object.keys(items);
+    //let categories = Object.keys(items);
+    let categories = [];
 
     let data = Object.values(items);
 
@@ -246,8 +247,8 @@ const cleanForChart = function(items, dist, bars) {
     items = readOrderByBrand(items, dist);
 
     let categoriesDist = [];
-    let categories = Object.keys(items);
-
+    //let categories = Object.keys(items);
+    let categories = [];
     let data = Object.values(items);
     if (dist) {
         data = data.sort((a, b) => (a.brand > b.brand) ? 1 : ((b.brand > a.brand) ? -1 : 0));
@@ -265,6 +266,7 @@ const cleanForChart = function(items, dist, bars) {
     data.forEach((item) => {
         DOLBY_AV.yes += item.dolbyLogo;
         categoriesDist.push(item.brand);
+        categories.push(item.brand);
         series.models.data.push(item.models);
         series.pio.data.push(item.pianoPlayed);
         series.tm.data.push(item.dolbyLogo);
