@@ -113,7 +113,8 @@ alert(qry);
 
     function makeTable(arr) {
 
-        let table = "<table  class='table table-striped'><tbody>";
+        let table = `<h3>CSV  list</h3>
+        <table  class='table table-striped'><tbody>`;
         arr.forEach((ele, ki) => {
             table += "<tr> <td>" + ele + "</td>";
             // table += `<td><button type="button" onclick="useThis('${ele}')">Use </button></td>`;
