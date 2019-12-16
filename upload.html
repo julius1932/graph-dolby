@@ -1,55 +1,139 @@
 <!DOCTYPE html>
 <html>
+
 <body>
-<style type="text/css">
-.body {
-    min-width: 310px;
-    max-width: 800px;
-    margin: 1em auto;
-}
-ul {
-  list-style-type: none;
-  margin: 0;
-  padding: 0;
-  overflow: hidden;
-  border: 1px solid #e7e7e7;
-  background-color: #f3f3f3;
-}
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <style type="text/css">
+    .body {
+        min-width: 310px;
+        max-width: 800px;
+        margin: 1em auto;
+    }
 
-li {
-  float: left;
-}
+    ul {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        border: 1px solid #e7e7e7;
+        background-color: #f3f3f3;
+    }
 
-li a {
-  display: block;
-  color: #666;
-  text-align: center;
-  padding: 14px 16px;
-  text-decoration: none;
-}
+    li {
+        float: left;
+    }
 
-li a:hover:not(.active) {
-  background-color: #ddd;
-}
+    li a {
+        display: block;
+        color: #666;
+        text-align: center;
+        padding: 14px 16px;
+        text-decoration: none;
+    }
 
-li a.active {
-  color: white;
-  background-color: #4CAF50;
-}
-</style>
+    li a:hover:not(.active) {
+        background-color: #ddd;
+    }
+
+    li a.active {
+        color: white;
+        background-color: #4CAF50;
+    }
+    </style>
+    <ul>
+        <li><a href="/"> All By Model</a></li>
+        <li><a href="/bydist">All By Distributor</a></li>
+        <li><a href="/clients">Query Based Analytics</a></li>
+        <li><a href="/retailer">Analytics By Retailer</a></li>
+        <li><a href="/upload-csv">Upload New Sheet</a></li>
+    </ul>
+    <form method="post" action="/upload-csv" enctype="multipart/form-data" class="body mainup">
+        Select CSV to upload:
+        <input type="file" name="file" id="fileToUpload" accept=".csv"></br>
+        <input type="submit" value="Upload CSV File" name="submit">
+    </form>
+    <div class="table-csv body" id="table-csv">
+        <table class='table table-striped'>
+        </table>
+    </div>
+    <script>
+    //$(document).ready(function() {
+    console.log("ready!");
+
+    const Adapter = {
+        read: (theUrl, callback) => {
+            $.ajax({
+                url: theUrl,
+                dataType: 'jsonp',
+                success: callback
+            });
+        },
+        save: function(dataToSave, theUrl, cb) {
+            $.ajax({
+                url: theUrl,
+                //dataType: 'text',
+                type: 'post',
+                contentType: 'application/x-www-form-urlencoded',
+                data: dataToSave,
+                success: cb
+            });
+        }
+    }
 
 
-<ul>
-  <li><a  href="/"> All By Model</a></li>
-  <li><a href="/bydist">All By Distributor</a></li>
-  <li><a href="/clients">Query Based Analytics</a></li>
-  <li><a href="/retailer">Analytics By Retailer</a></li>
-  <li><a href="/upload-csv">Upload New Sheet</a></li>
-</ul>
-<form action="/upload-csv" method="post" enctype="multipart/form-data" class="body">
-    Select CSV to upload:
-    <input type="file" name="file" id="fileToUpload" accept=".csv"></br>
-    <input type="submit" value="Upload CSV File" name="submit">
-</form>
+    Adapter.read('/allcsv', function(results) {
+        makeTable(results);
+    });
+
+
+    /*$(".mainup").submit(function(event) {
+        
+        event.preventDefault();
+        let qry = $(this).serialize();
+alert(qry);
+        Adapter.save(qry, '/upload-csv', function(results) {
+            console.log(results);
+            makeTable(results);
+        });
+    });*/
+
+    let deleteRow=function(csvFile) {
+        Adapter.save({ csvFile }, '/csv-delete', function(results) {
+            console.log(results);
+            makeTable(results);
+        });
+    }
+    const useThis = function(csvFile) {
+        Adapter.save({ csvFile }, '/csv-use', function(results) {
+            console.log(results);
+            makeTable(results);
+        });
+    }
+
+    function makeTable(arr) {
+
+        let table = "<table  class='table table-striped'><tbody>";
+        arr.forEach((ele, ki) => {
+            table += "<tr> <td>" + ele + "</td>";
+            // table += `<td><button type="button" onclick="useThis('${ele}')">Use </button></td>`;
+            table += `<td>
+                <td><button type="button" onclick="useThis('${ele}')">Use</button></td>
+                <td><button type="button" onclick="deleteRow('${ele}')">Delete</button></td>
+            </tr>`;
+        })
+        table += "</tbody></table>";
+
+        let div = document.getElementById("table-csv");
+        console.log(div);
+        div.innerHTML = table;
+        console.log(div);
+    }
+
+
+
+    //});
+    </script>
 </body>
+
 </html>

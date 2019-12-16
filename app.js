@@ -6,33 +6,16 @@ var cron = require('node-cron');
 const jsonfile = require('jsonfile');
 const http = require('http');
 const fs = require('fs');
-
+const path = require('path');
 
 const multer = require('multer');
 const csv = require('fast-csv');
 
 
-cron.schedule('*/1 * * * *', () => {
-    /*gsjson({
-          spreadsheetId: '1NWNFnVyMZ10AwnwFeAirC5vQNh2MgORywAfRckUFVPw',
-          // other options...
-      })
-      .then(function(result) {
-          console.log(result.length);
-          jsonfile.writeFile(`data.json`, result, { spaces: 2 }, function(err) {
-              console.error(err);
 
-          });
-
-      })
-      .catch(function(err) {
-          console.log(err.message);
-          console.log(err.stack);
-      });*/
-});
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-const upload = multer({ dest: 'tmp/csv/' });
+
 
 const HELPERS = require("./helpers");
 app.set('port', process.env.PORT || 3000);
@@ -73,13 +56,13 @@ app.post(`/clients`, function(req, res) {
     return HELPERS.clientsExcel(req, res);
 });
 app.get(`/retailer`, function(req, res) {
-     res.sendFile(__dirname + '/retailer.html'); 
+    res.sendFile(__dirname + '/retailer.html');
 });
 app.get(`/byRetailer`, function(req, res) {
     let param = req.query;
-    
+
     console.log(param);
-    return HELPERS.byRetailer(res,param);
+    return HELPERS.byRetailer(res, param);
 });
 app.get(`/client`, function(req, res) {
     let params = req.query;
@@ -190,7 +173,7 @@ app.get(`/client`, function(req, res) {
 });
 
 
-app.get(`/books`, function(req, res) {
+/*app.get(`/books`, function(req, res) {
     let data = {
         template: { 'shortid': 'rkgavynmhS' },
         data: {
@@ -214,7 +197,7 @@ app.get(`/books`, function(req, res) {
 
     let request = require('request');
     request(options).pipe(res);
-});
+});*/
 
 if (!module.parent) {
     app.listen(app.get('port'));
@@ -243,21 +226,84 @@ app.get('/upload-csv', function(req, res) {
     res.sendFile(__dirname + '/upload.html');
 });
 
-app.post('/upload-csv', upload.single('file'), function(req, res) {
+
+const storage = multer.diskStorage({
+    destination: function(req, file, cb) {
+        cb(null, 'tmp/csv/');
+    },
+
+    // By default, multer removes file extensions so let's add them back
+    filename: function(req, file, cb) {
+        cb(null, file.originalname + path.extname(file.originalname));
+    }
+});
+//const upload = multer({dest: 'tmp/csv/',});
+let upload = multer({ storage: storage }).single('file');
+app.post('/upload-csv', function(req, res) {
+    upload(req, res, function(err) {
+        const fileRows = [];
+        //console.log(req);
+        console.log(req.file.path);
+        csv.fromPath(req.file.path, { headers: true })
+            .on("data", function(data) {
+                fileRows.push(adjust(data)); // push each row
+            })
+            .on("end", function() {
+                // console.log(fileRows);
+                //jsonfile.writeFileSync(`data.json`, fileRows, { spaces: 2 });
+                //fs.unlinkSync(req.file.path); // remove temp file
+                ////process "fileRows" and respond
+                //allInDir(req, res);
+                res.sendFile(__dirname + '/success.html');
+            })
+    });
+});
+app.get("/allcsv", (req, res) => {
+    return allInDir(req, res);
+});
+app.post("/csv-use", (req, res) => {
+    console.log("oooooooooooooooooooooooooooooooooooooooooooooooooooooo");
+    let file = req.body.csvFile;
+    if (!file) {
+        return allInDir(req, res);
+    }
+    let filePath = 'tmp/csv/' + file;
     const fileRows = [];
-    // open uploaded file
-    csv.fromPath(req.file.path, { headers: true })
+    csv.fromPath(filePath, { headers: true })
         .on("data", function(data) {
             fileRows.push(adjust(data)); // push each row
         })
         .on("end", function() {
-            //console.log(fileRows);
             jsonfile.writeFileSync(`data.json`, fileRows, { spaces: 2 });
-            fs.unlinkSync(req.file.path); // remove temp file
-            //process "fileRows" and respond
-            res.sendFile(__dirname + '/success.html');
+            console.log(fileRows.length);
+            return allInDir(req, res);
         })
+    // return allInDir(req, res);
 });
+app.post("/csv-delete", (req, res) => {
+    let file = req.body.csvFile;
+    if (!file) {
+        return allInDir(req, res);
+    }
+    let filePath = 'tmp/csv/' + file;
+    fs.unlinkSync(filePath); // remove temp file
+    return allInDir(req, res);
+});
+
+function allInDir(req, res) {
+    const directoryPath = path.join(__dirname, 'tmp/csv');
+    //passsing directoryPath and callback function
+    fs.readdir(directoryPath, function(err, files) {
+        //handling error
+        if (err) {
+            return console.log('Unable to scan directory: ' + err);
+        }
+        console.log("files");
+        console.log(files);
+        //listing all files using forEach
+        return res.jsonp(files);
+    });
+}
 
 function adjust(data) {
     let item = {
