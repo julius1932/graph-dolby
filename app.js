@@ -10,7 +10,8 @@ const path = require('path');
 
 const multer = require('multer');
 const csv = require('fast-csv');
-
+var MongoClient = require('mongodb').MongoClient;
+var url = 'mongodb://junta:papa12345@ds251618.mlab.com:51618/analytics';
 
 
 app.use(bodyParser.json());
@@ -172,32 +173,7 @@ app.get(`/client`, function(req, res) {
 
 });
 
-
-/*app.get(`/books`, function(req, res) {
-    let data = {
-        template: { 'shortid': 'rkgavynmhS' },
-        data: {
-            title: "pppppppppp",
-            chart: [
-                ['Task', 'Hours per Day'],
-                ['Work', 8],
-                ['Friends', 2],
-                ['Eat', 2],
-                ['TV', 2],
-                ['Gym', 2],
-                ['Sleep', 8],
-            ]
-        }
-    };
-    let options = {
-        uri: 'http://localhost:5488/api/report',
-        method: 'POST',
-        json: data
-    }
-
-    let request = require('request');
-    request(options).pipe(res);
-});*/
+ 
 
 if (!module.parent) {
     app.listen(app.get('port'));
@@ -243,17 +219,27 @@ app.post('/upload-csv', function(req, res) {
     upload(req, res, function(err) {
         const fileRows = [];
         //console.log(req);
+        //
+
         console.log(req.file.path);
         csv.fromPath(req.file.path, { headers: true })
             .on("data", function(data) {
                 fileRows.push(adjust(data)); // push each row
             })
             .on("end", function() {
-                // console.log(fileRows);
-                //jsonfile.writeFileSync(`data.json`, fileRows, { spaces: 2 });
-                //fs.unlinkSync(req.file.path); // remove temp file
-                ////process "fileRows" and respond
-                //allInDir(req, res);
+
+                MongoClient.connect(url, function(err, client) {
+                    if (err) {
+                        console.log(err);
+                    } else {
+                        let db = client.db('analytics');
+                        db.collection('csv').insertOne({
+                            name: req.file.path,
+                            status: "0"
+                        });
+                    }
+                });
+
                 res.sendFile(__dirname + '/success.html');
             })
     });
