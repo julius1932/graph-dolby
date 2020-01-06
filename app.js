@@ -161,8 +161,8 @@ app.get(`/client`, function(req, res) {
             json: data
         };*/
         let options = {
-            //uri: 'https://playground.jsreport.net/w/anon/YtsnfCM2/api/report',
-            uri: 'https://playground.jsreport.net/w/anon/exIUKNsN/api/report',
+            uri: 'https://playground.jsreport.net/w/julius1932/9mFYNpcR/api/report',
+            //uri: 'https://playground.jsreport.net/w/anon/exIUKNsN/api/report',
             method: 'POST',
             json: data
         };
