@@ -1,347 +1,374 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-<style type="text/css">
-.highcharts-figure,
-.highcharts-data-table table {
-    min-width: 310px;
-    max-width: 800px;
-    margin: 1em auto;
-}
+    <style type="text/css">
+    .highcharts-figure,
+    .highcharts-data-table table {
+        min-width: 310px;
+        max-width: 800px;
+        margin: 1em auto;
+    }
 
-#container {
-    height: auto;
-}
+    #container {
+        height: auto;
+    }
 
-.highcharts-data-table table {
-    font-family: Verdana, sans-serif;
-    border-collapse: collapse;
-    border: 1px solid #EBEBEB;
-    margin: 10px auto;
-    text-align: center;
-    width: 100%;
-    max-width: 500px;
-}
+    .highcharts-data-table table {
+        font-family: Verdana, sans-serif;
+        border-collapse: collapse;
+        border: 1px solid #EBEBEB;
+        margin: 10px auto;
+        text-align: center;
+        width: 100%;
+        max-width: 500px;
+    }
 
-.highcharts-data-table caption {
-    padding: 1em 0;
-    font-size: 1.2em;
-    color: #555;
-}
+    .highcharts-data-table caption {
+        padding: 1em 0;
+        font-size: 1.2em;
+        color: #555;
+    }
 
-.highcharts-data-table th {
-    font-weight: 600;
-    padding: 0.5em;
-}
+    .highcharts-data-table th {
+        font-weight: 600;
+        padding: 0.5em;
+    }
 
-.highcharts-data-table td,
-.highcharts-data-table th,
-.highcharts-data-table caption {
-    padding: 0.5em;
-}
+    .highcharts-data-table td,
+    .highcharts-data-table th,
+    .highcharts-data-table caption {
+        padding: 0.5em;
+    }
 
-.highcharts-data-table thead tr,
-.highcharts-data-table tr:nth-child(even) {
-    background: #f8f8f8;
-}
+    .highcharts-data-table thead tr,
+    .highcharts-data-table tr:nth-child(even) {
+        background: #f8f8f8;
+    }
 
-.highcharts-data-table tr:hover {
-    background: #f1f7ff;
-}
+    .highcharts-data-table tr:hover {
+        background: #f1f7ff;
+    }
 
-ul {
-  list-style-type: none;
-  margin: 0;
-  padding: 0;
-  overflow: hidden;
-  border: 1px solid #e7e7e7;
-  background-color: #f3f3f3;
-  position: -webkit-sticky; /* Safari & IE */
-position: sticky;
-top: 0;
-}
+    ul {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        border: 1px solid #e7e7e7;
+        background-color: #f3f3f3;
+        position: -webkit-sticky;
+        /* Safari & IE */
+        position: sticky;
+        top: 0;
+    }
 
-li {
-  float: left;
-}
+    li {
+        float: left;
+    }
 
-li a {
-  display: block;
-  color: #666;
-  text-align: center;
-  padding: 14px 16px;
-  text-decoration: none;
-}
+    li a {
+        display: block;
+        color: #666;
+        text-align: center;
+        padding: 14px 16px;
+        text-decoration: none;
+    }
 
-li a:hover:not(.active) {
-  background-color: #ddd;
-}
+    li a:hover:not(.active) {
+        background-color: #ddd;
+    }
 
-li a.active {
-  color: white;
-  background-color: #4CAF50;
-}
-</style>
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.8.5/css/selectize.default.css">
-<script src="https://code.highcharts.com/highcharts.js"></script>
-<script src="https://code.highcharts.com/modules/exporting.js"></script>
-<script src="https://code.highcharts.com/modules/export-data.js"></script>
-<script src="https://code.highcharts.com/modules/accessibility.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.8.5/js/standalone/selectize.min.js"></script>
+    li a.active {
+        color: white;
+        background-color: #4CAF50;
+    }
+    </style>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.8.5/css/selectize.default.css">
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script src="https://code.highcharts.com/modules/export-data.js"></script>
+    <script src="https://code.highcharts.com/modules/accessibility.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.8.5/js/standalone/selectize.min.js"></script>
 </head>
+
 <body>
-
-<ul>
-  <li><a  href="/"> All By Model</a></li>
-  <li><a href="/bydist">All By Distributor</a></li>
-  <li><a href="/clients">Query Based Analytics</a></li>
-   <li><a href="/retailer">Analytics By Retailer</a></li>
-  <li><a href="/upload-csv">Upload New Sheet</a></li>
-</ul>
-
-<figure class="highcharts-figure">
-    <div id="container">
-        <form action="/clients" method="post" id="qry-form">
-            <select id="key" name="key">
-                <option value="retailerName">retailer Name</option>
-                <option value="location">location</option>
-                <option value="city">city</option>
-                <option value="country">country</option>
-                <option value="brandModel">brand Model Number</option>
-                <option value="brandName">brandName</option>
-                <option value="category">category</option>
-                <option value="trademark">trademark</option>
-                <option value="threeFiles">three Files</option>
-                <option value="pianoSound">piano Sound</option>
-                <option value="distributor">distributor</option>
-                <option value="countryOfOrigin">countryOfOrigin</option>
-            </select> </br>
-            <select id="values" name="values">
-            </select>
-            </br>
-            <input type="submit" value="Add">
+    <ul>
+        <li><a href="/"> All By Model</a></li>
+        <li><a href="/bydist">All By Distributor</a></li>
+        <li><a href="/clients">Query Based Analytics</a></li>
+        <li><a href="/retailer">Analytics By Retailer</a></li>
+        <li><a href="/upload-csv">Upload New Sheet</a></li>
+    </ul>
+    <figure class="highcharts-figure">
+        <div id="container">
+            <form action="/clients" method="post" id="qry-form">
+                <select id="key" name="key">
+                    <option value="retailerName">retailer Name</option>
+                    <option value="location">location</option>
+                    <option value="city">city</option>
+                    <option value="country">country</option>
+                    <option value="brandModel">brand Model Number</option>
+                    <option value="brandName">brandName</option>
+                    <option value="category">category</option>
+                    <option value="trademark">trademark</option>
+                    <option value="threeFiles">three Files</option>
+                    <option value="pianoSound">piano Sound</option>
+                    <option value="distributor">distributor</option>
+                    <option value="countryOfOrigin">countryOfOrigin</option>
+                </select> </br>
+                <select id="values" name="values">
+                </select>
+                </br>
+                <input type="submit" value="Add">
+            </form>
+        </div>
+        <div>
+            <table class="table table-striped" id="table">
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+        Tier 1
+        <select id="tier1" name="tier1" multiple>
+        </select>
+        Tier 2
+        <select id="tier2" name="tier2" multiple>
+        </select>
+        Tier 3
+        <select id="tier3" name="tier3" multiple>
+        </select> </br> </br>
+        Fields to show on graph
+        <select id="bars" name="bars" multiple>
+            <option value="models">Models</option>
+            <option value="pio">Piano Played</option>
+            <option value="tm">Dolby Logo</option>
+        </select> </br>
+        </div>
+        <form action="/clients" method="post" id="qry-form-post">
+            <button type="button" id="pdf">PDF analytic</button>
+            <button type="button" id='clear'>Clear</button>
+            <button type="button" id='excel'>Excel Sheet</button>
         </form>
-    </div>
-    <div>
-        <table class="table table-striped" id="table">
-            <tbody>
-            </tbody>
-        </table>
-    </div>
-    Tier 1
-    <select id="tier1" name="tier1" multiple>
-    </select>
-    Tier 2
-    <select id="tier2" name="tier2" multiple>
-    </select>
-    Tier 3
-    <select id="tier3" name="tier3" multiple>
-    </select> </br> </br>
-  Fields to show on graph
-    <select id="bars" name="bars" multiple>
-        <option value="models">Models</option>
-        <option value="pio">Piano Played</option>
-        <option value="tm">Dolby Logo</option>
-    </select> </br>
-    </div>
-    <form action="/clients" method="post" id="qry-form-post">
-        <button type="button" id="pdf">PDF analytic</button>
-        <button type="button" id='clear'>Clear</button>
-        <button type="button" id='excel'>Excel Sheet</button>
-    </form>
-    <script>
-    $('select').selectize({ plugins: ['remove_button'] });
-    let currValues = [];
-    init('retailername', "values");
+        <script>
+        $('select').selectize({ plugins: ['remove_button'] });
+        let currValues = [];
+        init('retailername', "values");
 
-    addTier();
+        addTier();
 
-    const Adapter = {
-        read: (theUrl, callback) => {
-            $.ajax({
-                url: theUrl,
-                dataType: 'jsonp',
-                success: callback
-            });
-        },
-        save: function(dataToSave, theUrl, cb) {
-            $.ajax({
-                url: theUrl,
-                //dataType: 'text',
-                type: 'post',
-                contentType: 'application/x-www-form-urlencoded',
-                data: dataToSave,
-                success: cb
-            });
-        }
-    }
-    $("#clear").click(function() {
-        $(".table > tbody").html("");
-    });
-    $('#excel').click(function() {
-        let QRY_STR = "";
-        let tiers = [1, 2, 3];
-        tiers.forEach((i) => {
-            let tier = $('#tier' + i).val();
-            let tr = 'tier' + i;
-            tier.forEach((curTr) => {
-                if (!QRY_STR) {
-                    QRY_STR = tr + "=" + curTr;
-                } else {
-                    QRY_STR += "&" + tr + "=" + curTr;
-                }
-            })
-        });
-        const $tableID = $('#table');
-        const $rows = $tableID.find('tr:not(:hidden)');
-        let headers = ["key", "value"];
-        $rows.each(function() {
-            const $td = $(this).find('td');
-            const h = {};
-            // Use the headers from earlier to name our hash keys
-            if ($td.length >= 2) {
-                let key = $td.eq(0).text();
-                let value = $td.eq(1).text();
-                if (key == "brandmodel" || key == "brandModel") {
-                    key = 'brandModel#';
-                }
-                if (key == "retailername" || key == "retailerName") {
-                    key = 'retailerName';
-                }
-                if (key == "brandname" || key == "brandName") {
-                    key = 'brandName';
-                }
-                if (key == "threefiles" || key == "threeFiles") {
-                    key = 'threeFiles';
-                }
-                if (key == "pianosound" || key == "pianoSound") {
-                    key = 'pianoSound';
-                }
-                if (key == "countryoforigin" || key == "countryOfOrigin") {
-                    key = 'countryOfOrigin';
-                }
-                if (key && value) {
-                    if (!QRY_STR) {
-                        QRY_STR = key + '=' + encodeURI(removeAmpsend(value));
-                    } else {
-                        QRY_STR += '&' + key + '=' + encodeURI(removeAmpsend(value));
-                    }
-                }
-            };
-        });
-        if (QRY_STR) {
-            Adapter.save(QRY_STR, '/clients', function(results) {
-                console.log(results);
-                JSONToCSVConvertor(results, "Data from allv", true);
-            });
-        } else {
-            alert("Query is empty");
-        }
-    });
-    $("#pdf").click(function() {
-        let QRY_STR = "";
-        let tiers = [1, 2, 3];
-        tiers.forEach((i) => {
-            let tier = $('#tier' + i).val();
-            let tr = 'tier' + i;
-            tier.forEach((curTr) => {
-                if (!QRY_STR) {
-                    QRY_STR = tr + "=" + curTr;
-                } else {
-                    QRY_STR += "&" + tr + "=" + curTr;
-                }
-            })
-        });
-        let bars = $('#bars').val();
-        bars.forEach((bar) => {
-            if (!QRY_STR) {
-                QRY_STR = "bars=" + bar;
-            } else {
-                QRY_STR += "&bars=" + bar;
+        const Adapter = {
+            read: (theUrl, callback) => {
+                $.ajax({
+                    url: theUrl,
+                    dataType: 'jsonp',
+                    success: callback
+                });
+            },
+            save: function(dataToSave, theUrl, cb) {
+                $.ajax({
+                    url: theUrl,
+                    //dataType: 'text',
+                    type: 'post',
+                    contentType: 'application/x-www-form-urlencoded',
+                    data: dataToSave,
+                    success: cb
+                });
             }
-        })
-        //alert(QRY_STR);
-        const $tableID = $('#table');
-        const $rows = $tableID.find('tr:not(:hidden)');
-        let headers = ["key", "value"];
-        $rows.each(function() {
-            const $td = $(this).find('td');
-
-            const h = {};
-
-            // Use the headers from earlier to name our hash keys
-            if ($td.length >= 2) {
-                let key = $td.eq(0).text();
-                let value = $td.eq(1).text();
-                if (key == "brandmodel" || key == "brandModel") {
-                    key = 'brandModel#';
-                }
-                if (key == "retailername" || key == "retailerName") {
-                    key = 'retailerName';
-                }
-                if (key == "brandname" || key == "brandName") {
-                    key = 'brandName';
-                }
-                if (key == "threefiles" || key == "threeFiles") {
-                    key = 'threeFiles';
-                }
-                if (key == "pianosound" || key == "pianoSound") {
-                    key = 'pianoSound';
-                }
-                if (key == "countryoforigin" || key == "countryOfOrigin") {
-                    key = 'countryOfOrigin';
-                }
-                if (key && value) {
-                    if (!QRY_STR) {
-                        QRY_STR = key + '=' + encodeURI(removeAmpsend(value));
-                    } else {
-                        QRY_STR += '&' + key + '=' + encodeURI(removeAmpsend(value));
-                    }
-                }
-            };
+        }
+        $("#clear").click(function() {
+            $(".table > tbody").html("");
         });
-        if (QRY_STR) {
-            var win = window.open('/client?' + QRY_STR, '_blank');
-            win.focus();
-        } else {
-            alert("Query is empty")
+        $('#excel').click(function() {
+            let QRY_STR = "";
+            let tiers = [1, 2, 3];
+            tiers.forEach((i) => {
+                let tier = $('#tier' + i).val();
+                let tr = 'tier' + i;
+                tier.forEach((curTr) => {
+                    if (!QRY_STR) {
+                        QRY_STR = tr + "=" + curTr;
+                    } else {
+                        QRY_STR += "&" + tr + "=" + curTr;
+                    }
+                })
+            });
+            const $tableID = $('#table');
+            const $rows = $tableID.find('tr:not(:hidden)');
+            let headers = ["key", "value"];
+            $rows.each(function() {
+                const $td = $(this).find('td');
+                const h = {};
+                // Use the headers from earlier to name our hash keys
+                if ($td.length >= 2) {
+                    let key = $td.eq(0).text();
+                    let value = $td.eq(1).text();
+                    if (key == "brandmodel" || key == "brandModel") {
+                        key = 'brandModel#';
+                    }
+                    if (key == "retailername" || key == "retailerName") {
+                        key = 'retailerName';
+                    }
+                    if (key == "brandname" || key == "brandName") {
+                        key = 'brandName';
+                    }
+                    if (key == "threefiles" || key == "threeFiles") {
+                        key = 'threeFiles';
+                    }
+                    if (key == "pianosound" || key == "pianoSound") {
+                        key = 'pianoSound';
+                    }
+                    if (key == "countryoforigin" || key == "countryOfOrigin") {
+                        key = 'countryOfOrigin';
+                    }
+                    if (key && value) {
+                        if (!QRY_STR) {
+                            QRY_STR = key + '=' + encodeURI(removeAmpsend(value));
+                        } else {
+                            QRY_STR += '&' + key + '=' + encodeURI(removeAmpsend(value));
+                        }
+                    }
+                };
+            });
+            if (QRY_STR) {
+                Adapter.save(QRY_STR, '/clients', function(results) {
+                    console.log(results);
+                    JSONToCSVConvertor(results, "Data from allv", true);
+                });
+            } else {
+                alert("Query is empty");
+            }
+        });
+        $("#pdf").click(function() {
+            let QRY_STR = "";
+            let tiers = [1, 2, 3];
+            tiers.forEach((i) => {
+                let tier = $('#tier' + i).val();
+                let tr = 'tier' + i;
+                tier.forEach((curTr) => {
+                    if (!QRY_STR) {
+                        QRY_STR = tr + "=" + curTr;
+                    } else {
+                        QRY_STR += "&" + tr + "=" + curTr;
+                    }
+                })
+            });
+            let bars = $('#bars').val();
+            bars.forEach((bar) => {
+                if (!QRY_STR) {
+                    QRY_STR = "bars=" + bar;
+                } else {
+                    QRY_STR += "&bars=" + bar;
+                }
+            })
+            //alert(QRY_STR);
+            const $tableID = $('#table');
+            const $rows = $tableID.find('tr:not(:hidden)');
+            let headers = ["key", "value"];
+            $rows.each(function() {
+                const $td = $(this).find('td');
+
+                const h = {};
+
+                // Use the headers from earlier to name our hash keys
+                if ($td.length >= 2) {
+                    let key = $td.eq(0).text();
+                    let value = $td.eq(1).text();
+                    if (key == "brandmodel" || key == "brandModel") {
+                        key = 'brandModel#';
+                    }
+                    if (key == "retailername" || key == "retailerName") {
+                        key = 'retailerName';
+                    }
+                    if (key == "brandname" || key == "brandName") {
+                        key = 'brandName';
+                    }
+                    if (key == "threefiles" || key == "threeFiles") {
+                        key = 'threeFiles';
+                    }
+                    if (key == "pianosound" || key == "pianoSound") {
+                        key = 'pianoSound';
+                    }
+                    if (key == "countryoforigin" || key == "countryOfOrigin") {
+                        key = 'countryOfOrigin';
+                    }
+                    if (key && value) {
+                        if (!QRY_STR) {
+                            QRY_STR = key + '=' + encodeURI(removeAmpsend(value));
+                        } else {
+                            QRY_STR += '&' + key + '=' + encodeURI(removeAmpsend(value));
+                        }
+                        if (key == "trademark" && value == 'No') {
+                            QRY_STR += '&' + key + '=';
+                        }
+                    }
+                };
+            });
+            if (QRY_STR) {
+                var win = window.open('/client?' + QRY_STR, '_blank');
+                win.focus();
+            } else {
+                alert("Query is empty")
+            }
+
+        });
+        $('select#key').change(function() {
+            //document.getElementById("select#values").disabled = true;
+            var optionSelected = $(this).find("option:selected");
+            var valueSelected = optionSelected.val();
+            ///alert(valueSelected);
+            init(valueSelected, "values");
+
+        });
+        $("#qry-form").submit(function(event) {
+            event.preventDefault();
+
+            var key = $('#key').val();
+            var value = $('#values').val();
+            if (value && value.trim() && currValues.includes(value)) {
+                $('.table  > tbody:last-child').append(`<tr id="${key}${value}"><td>${key}</td><td>${value}</td><td><button type="button" onclick="deleteRow('${key}${value}')">Remove</button></td></tr>`);
+            }
+        });
+
+        function deleteRow(rowid) {
+            console.log(rowid);
+            var row = document.getElementById(rowid);
+            row.parentNode.removeChild(row);
         }
 
-    });
-    $('select#key').change(function() {
-        //document.getElementById("select#values").disabled = true;
-        var optionSelected = $(this).find("option:selected");
-        var valueSelected = optionSelected.val();
-        ///alert(valueSelected);
-        init(valueSelected, "values");
+        function addTier() {
 
-    });
-    $("#qry-form").submit(function(event) {
-        event.preventDefault();
+            $.getJSON("/data/brandName", function(data) {
+                var tiers = ["tier1", "tier2", "tier3"];
+                tiers.forEach((tier) => {
+                    var selectize = $("select#" + tier)[0].selectize;
+                    selectize.clear();
+                    selectize.clearOptions();
+                    var options = [];
+                    for (var i = 0; i < data.length; i++) {
+                        options.push({ text: data[i], value: data[i] });
+                    }
+                    selectize.load(function(callback) {
+                        callback(options);
+                    });
+                })
 
-        var key = $('#key').val();
-        var value = $('#values').val();
-        if (value && value.trim() && currValues.includes(value)) {
-            $('.table  > tbody:last-child').append(`<tr id="${key}${value}"><td>${key}</td><td>${value}</td><td><button type="button" onclick="deleteRow('${key}${value}')">Remove</button></td></tr>`);
+            });
         }
-    });
 
-    function deleteRow(rowid) {
-        console.log(rowid);
-        var row = document.getElementById(rowid);
-        row.parentNode.removeChild(row);
-    }
+        function removeAmpsend(str) {
+            return str.split("&").join("");
+        }
 
-    function addTier() {
-
-        $.getJSON("/data/brandName", function(data) {
-            var tiers = ["tier1", "tier2", "tier3"];
-            tiers.forEach((tier) => {
-                var selectize = $("select#" + tier)[0].selectize;
-                selectize.clear();
-                selectize.clearOptions();
+        function init(key, id) {
+            var selectize = $("select#" + id)[0].selectize;
+            selectize.clear();
+            selectize.clearOptions();
+            $.getJSON("/data/" + key, function(data) {
+                console.log(data);
+                currValues = data;
                 var options = [];
                 for (var i = 0; i < data.length; i++) {
                     options.push({ text: data[i], value: data[i] });
@@ -349,103 +376,83 @@ li a.active {
                 selectize.load(function(callback) {
                     callback(options);
                 });
-            })
 
-        });
-    }
-    function removeAmpsend(str){
-        return str.split("&").join("");
-    }
-    function init(key, id) {
-        var selectize = $("select#" + id)[0].selectize;
-        selectize.clear();
-        selectize.clearOptions();
-        $.getJSON("/data/" + key, function(data) {
-            console.log(data);
-            currValues = data;
-            var options = [];
-            for (var i = 0; i < data.length; i++) {
-                options.push({ text: data[i], value: data[i] });
-            }
-            selectize.load(function(callback) {
-                callback(options);
             });
+        }
 
-        });
-    }
+        function JSONToCSVConvertor(JSONData, ReportTitle, ShowLabel) {
+            //If JSONData is not an object then JSON.parse will parse the JSON string in an Object
+            var arrData = typeof JSONData != 'object' ? JSON.parse(JSONData) : JSONData;
 
-    function JSONToCSVConvertor(JSONData, ReportTitle, ShowLabel) {
-        //If JSONData is not an object then JSON.parse will parse the JSON string in an Object
-        var arrData = typeof JSONData != 'object' ? JSON.parse(JSONData) : JSONData;
+            var CSV = '';
+            //Set Report title in first row or line
 
-        var CSV = '';
-        //Set Report title in first row or line
+            CSV += ReportTitle + '\r\n\n';
 
-        CSV += ReportTitle + '\r\n\n';
+            //This condition will generate the Label/Header
+            if (ShowLabel) {
+                var row = "";
 
-        //This condition will generate the Label/Header
-        if (ShowLabel) {
-            var row = "";
+                //This loop will extract the label from 1st index of on array
+                for (var index in arrData[0]) {
 
-            //This loop will extract the label from 1st index of on array
-            for (var index in arrData[0]) {
+                    //Now convert each value to string and comma-seprated
+                    row += index + ',';
+                }
 
-                //Now convert each value to string and comma-seprated
-                row += index + ',';
+                row = row.slice(0, -1);
+
+                //append Label row with line break
+                CSV += row + '\r\n';
             }
 
-            row = row.slice(0, -1);
+            //1st loop is to extract each row
+            for (var i = 0; i < arrData.length; i++) {
+                var row = "";
 
-            //append Label row with line break
-            CSV += row + '\r\n';
-        }
+                //2nd loop will extract each column and convert it in string comma-seprated
+                for (var index in arrData[i]) {
+                    row += '"' + arrData[i][index] + '",';
+                }
 
-        //1st loop is to extract each row
-        for (var i = 0; i < arrData.length; i++) {
-            var row = "";
+                row.slice(0, row.length - 1);
 
-            //2nd loop will extract each column and convert it in string comma-seprated
-            for (var index in arrData[i]) {
-                row += '"' + arrData[i][index] + '",';
+                //add a line break after each row
+                CSV += row + '\r\n';
             }
 
-            row.slice(0, row.length - 1);
+            if (CSV == '') {
+                alert("Invalid data");
+                return;
+            }
 
-            //add a line break after each row
-            CSV += row + '\r\n';
+            //Generate a file name
+            var fileName = "MyReport_";
+            //this will remove the blank-spaces from the title and replace it with an underscore
+            fileName += ReportTitle.replace(/ /g, "_");
+
+            //Initialize file format you want csv or xls
+            var uri = 'data:text/csv;charset=utf-8,' + escape(CSV);
+
+            // Now the little tricky part.
+            // you can use either>> window.open(uri);
+            // but this will not work in some browsers
+            // or you will not get the correct file extension    
+
+            //this trick will generate a temp <a /> tag
+            var link = document.createElement("a");
+            link.href = uri;
+
+            //set the visibility hidden so it will not effect on your web-layout
+            link.style = "visibility:hidden";
+            link.download = fileName + ".csv";
+
+            //this part will append the anchor tag and remove it after automatic click
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
         }
-
-        if (CSV == '') {
-            alert("Invalid data");
-            return;
-        }
-
-        //Generate a file name
-        var fileName = "MyReport_";
-        //this will remove the blank-spaces from the title and replace it with an underscore
-        fileName += ReportTitle.replace(/ /g, "_");
-
-        //Initialize file format you want csv or xls
-        var uri = 'data:text/csv;charset=utf-8,' + escape(CSV);
-
-        // Now the little tricky part.
-        // you can use either>> window.open(uri);
-        // but this will not work in some browsers
-        // or you will not get the correct file extension    
-
-        //this trick will generate a temp <a /> tag
-        var link = document.createElement("a");
-        link.href = uri;
-
-        //set the visibility hidden so it will not effect on your web-layout
-        link.style = "visibility:hidden";
-        link.download = fileName + ".csv";
-
-        //this part will append the anchor tag and remove it after automatic click
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-    }
-    </script>
+        </script>
 </body>
+
 </html>

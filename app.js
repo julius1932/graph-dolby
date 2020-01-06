@@ -98,7 +98,7 @@ app.get(`/client`, function(req, res) {
     t2 = t2.map(x => clean(x));
     t3 = t3.map(x => clean(x));
     console.log(t1, t2, t3);
-    HELPERS.clients(req, res, function(result) {
+    HELPERS.clients(req, res, function(result) { 
 
         let t1Data = result.all.filter((item) => t1.includes(clean(item.brandName)));
 
