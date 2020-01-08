@@ -240,7 +240,7 @@ app.post('/upload-csv', function(req, res) {
                     }
                 });
 
-                res.sendFile(__dirname + '/success.html');
+                res.sendFile(__dirname + '/upload.html');
             })
     });
 });
