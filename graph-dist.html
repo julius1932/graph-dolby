@@ -1,272 +1,429 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-<style type="text/css">
-.highcharts-figure,
-.highcharts-data-table table {
-    min-width: 310px;
-    max-width: 800px;
-    margin: 1em auto;
-}
+    <style type="text/css">
+    .highcharts-figure,
+    .highcharts-data-table table {
+        min-width: 310px;
+        max-width: 800px;
+        margin: 1em auto;
+    }
 
-#container {
-    height: auto;
-}
+    #container {
+        height: auto;
+    }
 
-.highcharts-data-table table {
-    font-family: Verdana, sans-serif;
-    border-collapse: collapse;
-    border: 1px solid #EBEBEB;
-    margin: 10px auto;
-    text-align: center;
-    width: 100%;
-    max-width: 500px;
-}
+    .highcharts-data-table table {
+        font-family: Verdana, sans-serif;
+        border-collapse: collapse;
+        border: 1px solid #EBEBEB;
+        margin: 10px auto;
+        text-align: center;
+        width: 100%;
+        max-width: 500px;
+    }
 
-.highcharts-data-table caption {
-    padding: 1em 0;
-    font-size: 1.2em;
-    color: #555;
-}
+    .highcharts-data-table caption {
+        padding: 1em 0;
+        font-size: 1.2em;
+        color: #555;
+    }
 
-.highcharts-data-table th {
-    font-weight: 600;
-    padding: 0.5em;
-}
+    .highcharts-data-table th {
+        font-weight: 600;
+        padding: 0.5em;
+    }
 
-.highcharts-data-table td,
-.highcharts-data-table th,
-.highcharts-data-table caption {
-    padding: 0.5em;
-}
+    .highcharts-data-table td,
+    .highcharts-data-table th,
+    .highcharts-data-table caption {
+        padding: 0.5em;
+    }
 
-.highcharts-data-table thead tr,
-.highcharts-data-table tr:nth-child(even) {
-    background: #f8f8f8;
-}
+    .highcharts-data-table thead tr,
+    .highcharts-data-table tr:nth-child(even) {
+        background: #f8f8f8;
+    }
 
-.highcharts-data-table tr:hover {
-    background: #f1f7ff;
-}
-ul {
-  list-style-type: none;
-  margin: 0;
-  padding: 0;
-  overflow: hidden;
-  border: 1px solid #e7e7e7;
-  background-color: #f3f3f3;
-}
+    .highcharts-data-table tr:hover {
+        background: #f1f7ff;
+    }
 
-li {
-  float: left;
-}
+    ul {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        border: 1px solid #e7e7e7;
+        background-color: #f3f3f3;
+    }
 
-li a {
-  display: block;
-  color: #666;
-  text-align: center;
-  padding: 14px 16px;
-  text-decoration: none;
-}
+    li {
+        float: left;
+    }
 
-li a:hover:not(.active) {
-  background-color: #ddd;
-}
+    li a {
+        display: block;
+        color: #666;
+        text-align: center;
+        padding: 14px 16px;
+        text-decoration: none;
+    }
 
-li a.active {
-  color: white;
-  background-color: #4CAF50;
-}
-</style>
-<script src="https://code.highcharts.com/highcharts.js"></script>
-<script src="https://code.highcharts.com/modules/exporting.js"></script>
-<script src="https://code.highcharts.com/modules/export-data.js"></script>
-<script src="https://code.highcharts.com/modules/accessibility.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    li a:hover:not(.active) {
+        background-color: #ddd;
+    }
+
+    li a.active {
+        color: white;
+        background-color: #4CAF50;
+    }
+    </style>
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script src="https://code.highcharts.com/modules/export-data.js"></script>
+    <script src="https://code.highcharts.com/modules/accessibility.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-csv/0.71/jquery.csv-0.71.min.js"></script>
 </head>
+
 <body>
-
-<ul>
-  <li><a  href="/"> All By Model</a></li>
-  <li><a href="/bydist">All By Distributor</a></li>
-  <li><a href="/clients">Query Based Analytics</a></li>
-  <li><a href="/retailer">Analytics By Retailer</a></li>
-  <li><a href="/upload-csv">Upload New Sheet</a></li>
-</ul>
-<figure class="highcharts-figure">
-    <form class="dist-from">
-        <select id="dist" multiple name="dists">
-        </select>
-        <input type="submit" value="Show">
-    </form>
-    <div id="container"></div>
-    <p class="highcharts-description">
-    </p>
-</figure>
-<script>
-const Adapter = {
-    read: (theUrl, callback) => {
-        $.ajax({
-            url: theUrl,
-            dataType: 'jsonp',
-            success: callback
-        });
-    },
-    save: function(dataToSave, theUrl, cb) {
-        $.ajax({
-            url: theUrl,
-            //dataType: 'text',
-            type: 'post',
-            contentType: 'application/x-www-form-urlencoded',
-            data: dataToSave,
-            success: cb
-        });
-    }
-}
-
-Adapter.read('/dist', function(results) {
-    console.log(results);
-    if (results && Array.isArray(results)) {
-        results.sort();
-    }
-    let options = "";
-    results.forEach(function(dist) {
-        options += `<option value="${dist}">${dist}</option>`
-    });
-    let sel = document.getElementById("dist");
-    sel.innerHTML = options;
-});
-
-
-$(".dist-from").submit(function(event) {
-    event.preventDefault();
-    var qry = $(this).serialize();
-     //alert(qry); 
-    showGraph(qry);
-});
-
-function showGraph(qry) {
-    Adapter.save(qry, '/bybrands', function(results) {
-        console.log(results);
-        let numCate = results.categories.length;
-        let divHeight = numCate / 5 * 400;
-        if (divHeight >= 400) {
-            $('#container').css('height', divHeight + 'px');
-        } else {
-            $('#container').css('height', 'auto');
+    <ul>
+        <li><a href="/"> All By Model</a></li>
+        <li><a href="/bydist">All By Distributor</a></li>
+        <li><a href="/clients">Query Based Analytics</a></li>
+        <li><a href="/retailer">Analytics By Retailer</a></li>
+        <li><a href="/upload-csv">Upload New Sheet</a></li>
+    </ul>
+    <figure class="highcharts-figure">
+        <form class="dist-from">
+            <select id="dist" multiple name="dists">
+            </select>
+            <input type="submit" value="Show">
+            <div id="dvImportSegments" class="fileupload ">
+                <fieldset>
+                    <legend>Upload your CSV File</legend>
+                    <input type="file" name="File Upload" id="txtFileUpload" accept=".csv" />
+                </fieldset>
+            </div>
+            <input type="submit" value="DOwnload" id="download-button">
+        </form>
+        <div id="container"></div>
+        <p class="highcharts-description">
+        </p>
+    </figure>
+    <script>
+    let DATA_MANU = [];
+    const Adapter = {
+        read: (theUrl, callback) => {
+            $.ajax({
+                url: theUrl,
+                dataType: 'jsonp',
+                success: callback
+            });
+        },
+        save: function(dataToSave, theUrl, cb) {
+            $.ajax({
+                url: theUrl,
+                //dataType: 'text',
+                type: 'post',
+                contentType: 'application/x-www-form-urlencoded',
+                data: dataToSave,
+                success: cb
+            });
         }
-        Highcharts.chart('container', {
+    }
 
-            'plotOptions': {
-                'column': {
-                    'colorByPoint': true //need to become true for color bar.
-                }
-            },
-            //you can list color at here or with series both are valid
-            'colors': ['#7cb5ec', '#ffa500', '#07023d'],
+    Adapter.read('/dist', function(results) {
+        console.log(results);
+        if (results && Array.isArray(results)) {
+            results.sort();
+        }
+        let options = "";
+        results.forEach(function(dist) {
+            options += `<option value="${dist}">${dist}</option>`
+        });
+        let sel = document.getElementById("dist");
+        sel.innerHTML = options;
+    });
+
+
+    $(".dist-from").submit(function(event) {
+        event.preventDefault();
+        var qry = $(this).serialize();
+        alert(qry);
+        showGraph(qry);
+    });
+    $("#download-button").click(function() {
+        event.preventDefault();
+        var qry = "";
+        var $el = $("#dist");
+        $el.find('option:selected').each(function() {
+            var optionValue = $(this).val();
+            var optionText = $(this).text();
+            // console.log("optionText",optionText);  
+            //data.push({ value: $(this).val(), text: $(this).text() });
+            if (!qry) {
+                qry = "dists=" + encodeURI(optionText);
+            } else {
+                qry += "&";
+                qry += "dists=" + encodeURI(optionText);
+            }
+        });
+        if (!qry) {
+            alert("Select Manufacturers/Distributors");
+            return;
+
+        }
+        // alert(qry);
+        Adapter.save(qry, '/bybrands', function(results) {
+
+            let dataD = [];
+            results.categories.forEach((ele, i) => {
+                dataD.push({ Category: ele, Models: results.series[0].data[i], "Piano Played": results.series[1].data[i] });
+
+            })
+            if (!DATA_MANU || DATA_MANU.length == 0) {
+                alert("Upload manufacturer list csv");
+            } else {
+                let fuzzed = fuzzyMatch(dataD, DATA_MANU);
+                console.log(fuzzed);
+                // DownloadJSON2CSV(fuzzed);
+                downloadJSON2CSV(fuzzed, "fuzz-matched-dolby", true);
+            }
+
+        });
+    });
+
+    function showGraph(qry) {
+        Adapter.save(qry, '/bybrands', function(results) {
+            console.log(results);
+            DATA_FROM_SERVER = results;
+            let numCate = results.categories.length;
+            let divHeight = numCate / 5 * 400;
+            if (divHeight >= 400) {
+                $('#container').css('height', divHeight + 'px');
+            } else {
+                $('#container').css('height', 'auto');
+            }
+            Highcharts.chart('container', {
+
+                'plotOptions': {
+                    'column': {
+                        'colorByPoint': true //need to become true for color bar.
+                    }
+                },
+                //you can list color at here or with series both are valid
+                'colors': ['#7cb5ec', '#ffa500', '#07023d'],
+                chart: {
+                    type: 'bar'
+                },
+                title: {
+                    text: 'DD India data - DO11SEP2019-881 Analysi'
+                },
+                subtitle: {
+                    text: 'Source: <a href="https://docs.google.com/spreadsheets/d/1NWNFnVyMZ10AwnwFeAirC5vQNh2MgORywAfRckUFVPw/edit#gid=0">Google Sheet</a>'
+                },
+                xAxis: {
+                    //categories: ['Africa', 'America', 'Asia', 'Europe', 'Oceania'],
+                    categories: results.categories,
+
+
+                    title: {
+                        text: null
+                    }
+                },
+                yAxis: {
+                    min: 0,
+                    tickInterval: 1,
+                    title: {
+                        text: 'Number (Quantity)',
+                        align: 'high'
+                    },
+                    labels: {
+                        overflow: 'justify'
+                    }
+                },
+                tooltip: {
+                    valueSuffix: ''
+                },
+                plotOptions: {
+                    bar: {
+                        dataLabels: {
+                            enabled: true
+                        }
+                    }
+                },
+                legend: {
+                    layout: 'vertical',
+                    align: 'right',
+                    verticalAlign: 'top',
+                    x: -40,
+                    y: 80,
+                    floating: false,
+                    borderWidth: 1,
+                    backgroundColor: Highcharts.defaultOptions.legend.backgroundColor || '#FFFFFF',
+                    shadow: true
+                },
+                credits: {
+                    enabled: false
+                },
+                "series": results.series
+            });
+        });
+    }
+
+    function pieChart(dataChart, title, id) {
+        Highcharts.setOptions({
+            colors: Highcharts.map(Highcharts.getOptions().colors, function(color) {
+                return {
+                    radialGradient: {
+                        cx: 0.5,
+                        cy: 0.3,
+                        r: 0.7
+                    },
+                    stops: [
+                        [0, color],
+                        [1, Highcharts.Color(color).brighten(-0.3).get('rgb')] // darken
+                    ]
+                };
+            })
+        });
+
+        // Build the chart
+        Highcharts.chart(id, {
             chart: {
-                type: 'bar'
+                plotBackgroundColor: null,
+                plotBorderWidth: null,
+                plotShadow: false,
+                type: 'pie'
             },
             title: {
-                text: 'DD India data - DO11SEP2019-881 Analysi'
-            },
-            subtitle: {
-                text: 'Source: <a href="https://docs.google.com/spreadsheets/d/1NWNFnVyMZ10AwnwFeAirC5vQNh2MgORywAfRckUFVPw/edit#gid=0">Google Sheet</a>'
-            },
-            xAxis: {
-                //categories: ['Africa', 'America', 'Asia', 'Europe', 'Oceania'],
-                categories: results.categories,
-
-
-                title: {
-                    text: null
-                }
-            },
-            yAxis: {
-                min: 0,
-                tickInterval: 1,
-                title: {
-                    text: 'Number (Quantity)',
-                    align: 'high'
-                },
-                labels: {
-                    overflow: 'justify'
-                }
+                text: title,
             },
             tooltip: {
-                valueSuffix: ''
+                pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
             },
             plotOptions: {
-                bar: {
+                pie: {
+                    allowPointSelect: true,
+                    cursor: 'pointer',
                     dataLabels: {
-                        enabled: true
+                        enabled: true,
+                        format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                        connectorColor: 'silver'
                     }
                 }
             },
-            legend: {
-                layout: 'vertical',
-                align: 'right',
-                verticalAlign: 'top',
-                x: -40,
-                y: 80,
-                floating: false,
-                borderWidth: 1,
-                backgroundColor: Highcharts.defaultOptions.legend.backgroundColor || '#FFFFFF',
-                shadow: true
-            },
-            credits: {
-                enabled: false
-            },
-            "series": results.series
+            series: dataChart,
         });
-    });
-}
+    }
+    // The event listener for the file upload
+    document.getElementById('txtFileUpload').addEventListener('change', upload, false);
 
-function pieChart(dataChart , title,id) {
-    Highcharts.setOptions({
-        colors: Highcharts.map(Highcharts.getOptions().colors, function(color) {
-            return {
-                radialGradient: {
-                    cx: 0.5,
-                    cy: 0.3,
-                    r: 0.7
-                },
-                stops: [
-                    [0, color],
-                    [1, Highcharts.Color(color).brighten(-0.3).get('rgb')] // darken
-                ]
-            };
-        })
-    });
+    // Method that checks that the browser supports the HTML5 File API
+    function browserSupportFileUpload() {
+        var isCompatible = false;
+        if (window.File && window.FileReader && window.FileList && window.Blob) {
+            isCompatible = true;
+        }
+        return isCompatible;
+    }
 
-    // Build the chart
-    Highcharts.chart(id, {
-        chart: {
-            plotBackgroundColor: null,
-            plotBorderWidth: null,
-            plotShadow: false,
-            type: 'pie'
-        },
-        title: {
-            text: title,
-        },
-        tooltip: {
-            pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
-        },
-        plotOptions: {
-            pie: {
-                allowPointSelect: true,
-                cursor: 'pointer',
-                dataLabels: {
-                    enabled: true,
-                    format: '<b>{point.name}</b>: {point.percentage:.1f} %',
-                    connectorColor: 'silver'
+    // Method that reads and processes the selected file
+    function upload(evt) {
+        if (!browserSupportFileUpload()) {
+            alert('The File APIs are not fully supported in this browser!');
+        } else {
+            var data = null;
+            var file = evt.target.files[0];
+            var reader = new FileReader();
+            reader.readAsText(file);
+            reader.onload = function(event) {
+                var csvData = event.target.result;
+                data = $.csv.toArrays(csvData);
+                if (data && data.length > 0) {
+                    data = data.map(x => {
+                        return { "Manufacturer": x[0] }
+                    });
+                    console.log(data);
+                    DATA_MANU = data;
+                    alert('Imported -' + data.length + '- rows successfully!');
+
+                } else {
+                    alert('No data to import!');
                 }
+            };
+            reader.onerror = function() {
+                alert('Unable to read ' + file.fileName);
+            };
+        }
+    }
+
+
+    function fuzzyMatch(detailArr, dCompare) {
+        let dataArr = [];
+        for (let i = 0; i < detailArr.length; i++) {
+            let piano = detailArr[i]["Piano Played"];
+            let models = detailArr[i]["Models"];
+
+            detailArr[i].Manufacturer = "";
+            detailArr[i].Percentage = Math.round((piano / models) * 100);
+
+            let manName = detailArr[i]["Category"].toLowerCase().split(":")[0];
+            manName = manName.split(" ").join("").split(",").join("").split(".").join("");
+            let manufactName = manName.replace("limited", "ltd").replace("private", "ltd").trim();
+
+            for (let j = 0; j < dCompare.length; j++) {
+
+                let manufacturer = dCompare[j]["Manufacturer"].toLowerCase();
+                manufacturer = manufacturer.split(" ").join("").split(",").join("").split(".").join("");
+                let compName = manufacturer.replace("limited", "ltd").replace("private", "ltd").trim();
+
+                if (manufactName == compName) {
+                    console.log("========================================Exact match " + i);
+                    detailArr[i].Manufacturer = "Exact Match";
+                    dataArr.push(detailArr[i]);
+                    break;
+                }
+
+                if (manufactName.includes(compName) || compName.includes(manufactName)) {
+                    console.log("+++++++++++++++++++++++++++++++++++++++++Near match " + i);
+                    detailArr[i].Manufacturer = "Near Match";
+                }
+
+                if (j == dCompare.length - 1) {
+                    if (detailArr[i].Manufacturer == "") {
+                        detailArr[i].Manufacturer = "No Match";
+                    }
+                    dataArr.push(detailArr[i]);
+                }
+
             }
-        },
-        series: dataChart,
-    });
-}
-</script>
+        }
+
+        return dataArr;
+    }
+
+    function downloadJSON2CSV(objArray) {
+        var csv = 'Category,Models,Piano Played,Manufacturer,Percentage\n';
+        objArray.forEach(function(row) {
+            let values= Object.values(row);
+            console.log(values);
+            values[0]=values[0].split(",").join(" ");
+            csv += values.join(',');
+            csv += "\n";
+        });
+
+        var hiddenElement = document.createElement('a');
+        hiddenElement.href = 'data:text/csv;charset=utf-8,' + encodeURI(csv);
+        hiddenElement.target = '_blank';
+        hiddenElement.download = 'fuzzy-matched-dolby-list.csv';
+        hiddenElement.click();
+        
+    }
+    </script>
 </body>
+
 </html>

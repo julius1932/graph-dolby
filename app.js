@@ -98,7 +98,7 @@ app.get(`/client`, function(req, res) {
     t2 = t2.map(x => clean(x));
     t3 = t3.map(x => clean(x));
     console.log(t1, t2, t3);
-    HELPERS.clients(req, res, function(result) { 
+    HELPERS.clients(req, res, function(result) {
 
         let t1Data = result.all.filter((item) => t1.includes(clean(item.brandName)));
 
@@ -173,7 +173,7 @@ app.get(`/client`, function(req, res) {
 
 });
 
- 
+
 
 if (!module.parent) {
     app.listen(app.get('port'));
@@ -257,7 +257,9 @@ app.post("/csv-use", (req, res) => {
     const fileRows = [];
     csv.fromPath(filePath, { headers: true })
         .on("data", function(data) {
-            fileRows.push(adjust(data)); // push each row
+            if (data["Retailer Name"].trim()) {
+                fileRows.push(adjust(data)); // push each row
+            }
         })
         .on("end", function() {
             jsonfile.writeFileSync(`data.json`, fileRows, { spaces: 2 });
