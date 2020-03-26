@@ -79,6 +79,19 @@
         color: white;
         background-color: #4CAF50;
     }
+
+    input[type="submit"] {
+    text-align: center;
+    padding: 5px 28px 5px 28px;
+    border: 1px solid #dedede;
+    border-radius: 2px;
+    background-color: #dbdce494;
+    color: #322044;
+    text-transform: uppercase;
+    font-size: 12px;
+    font-weight: bold;
+    letter-spacing: 0.5px;
+}
     </style>
     <script src="https://code.highcharts.com/highcharts.js"></script>
     <script src="https://code.highcharts.com/modules/exporting.js"></script>
@@ -98,16 +111,16 @@
     </ul>
     <figure class="highcharts-figure">
         <form class="dist-from">
-            <select id="dist" multiple name="dists">
+            <select id="dist" multiple name="dists" style="margin-bottom: 10px">
             </select>
-            <input type="submit" value="Show">
+            <input type="submit" value="Show" style="position: absolute; margin: 44px 20px 0px 20px;">
             <div id="dvImportSegments" class="fileupload ">
                 <fieldset>
                     <legend>Upload your CSV File</legend>
                     <input type="file" name="File Upload" id="txtFileUpload" accept=".csv" />
                 </fieldset>
             </div>
-            <input type="submit" value="Download" id="download-button">
+            <input type="submit" value="Download" id="download-button" style="margin:5px">
         </form>
         <div id="container"></div>
         <p class="highcharts-description">
