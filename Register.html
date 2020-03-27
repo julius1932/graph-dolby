@@ -12,14 +12,22 @@
 
 <body>
     <div class="login-wrap" style="max-width: 478px;min-height: 625px;">
-        <div class="login-html register-html">
+        <div class="login-html" style="padding-top: 30px">
             <input id="tab-2" type="radio" name="tab" class="sign-up" checked><label class="tab">Register</label>
             <div class="login-form">
                 <form action="/signup" id="signup" method="post">
                     <div class="sign-up-htm">
+                         <div class="group">
+                            <label class="label">Enter Name</label>
+                            <input type="text" class="input" name="name" required="required">
+                        </div>
                         <div class="group">
                             <label class="label">Enter Email Address</label>
                             <input type="text" class="input" name="email" onblur="checkEmail(this.value)" required="required">
+                        </div>
+                       <div class="group">
+                            <label class="label">Enter Company/Group Name</label>
+                            <input type="text" class="input" name="cname" required="required">
                         </div>
                         <div class="group">
                             <label class="label">Enter Password</label>
