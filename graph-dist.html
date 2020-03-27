@@ -224,21 +224,7 @@
     });
     $("#download-button").click(function() {
         event.preventDefault();
-        var qry = "";
-        var $el = $("#dist");
-        $el.find('option:selected').each(function() {
-            var optionValue = $(this).val();
-            var optionText = $(this).text();
-            // console.log("optionText",optionText);  
-            //data.push({ value: $(this).val(), text: $(this).text() });
-            if (!qry) {
-                qry = "dists=" + encodeURI(optionText);
-            } else {
-                qry += "&";
-                qry += "dists=" + encodeURI(optionText);
-            }
-        });
-      qry =  $('.dist-from').serialize();
+        var qry =  $('.dist-from').serialize();
         if (!qry) {
             alert("Select Manufacturers/Distributors");
             return;
