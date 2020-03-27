@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Login/Register</title>
+	<link rel="stylesheet" type="text/css" href="login.css">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+	<link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Condensed:700" rel="stylesheet" type="text/css">
+	<link href="https://fonts.googleapis.com/css?family=Roboto:100" rel="stylesheet" type="text/css">
+</head>
+<body>
+  <div class="login-wrap">
+    <div class="login-html">
+        <input id="tab-1" type="radio" name="tab" class="sign-in" checked><label for="tab-1" class="tab">Log In</label>
+        <input id="tab-2" type="radio" name="tab" class="sign-up"><label for="tab-2" class="tab">Register</label>
+
+        <div class="login-form">
+         <form action="/login" id="login-form" method="post">
+            <div class="sign-in-htm">
+                <div class="group">
+                    <label for="user" class="label">Email</label>
+                    <input name="email" type="text" class="input" required="required">
+                </div>
+                <div class="group">
+                    <label for="pass" class="label">Password</label>
+                    <input name="password" type="password" class="input" data-type="password" required="required">
+                </div>
+                <div class="group">
+                    <input type="submit" class="btn btn-primary" value="Log In">
+                </div>
+            </div>
+        </form>
+        </div>
+    </div>
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+ <script src="login.js"></script>
+</body>
+</html>
+
+
