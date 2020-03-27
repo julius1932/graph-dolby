@@ -81,64 +81,66 @@
     }
 
     input[type="submit"] {
-    text-align: center;
-    padding: 5px 28px 5px 28px;
-    border: 1px solid #dedede;
-    border-radius: 2px;
-    background-color: #dbdce494;
-    color: #322044;
-    text-transform: uppercase;
-    font-size: 12px;
-    font-weight: bold;
-    letter-spacing: 0.5px;
-   }
+        text-align: center;
+        padding: 5px 28px 5px 28px;
+        border: 1px solid #dedede;
+        border-radius: 2px;
+        background-color: #dbdce494;
+        color: #322044;
+        text-transform: uppercase;
+        font-size: 12px;
+        font-weight: bold;
+        letter-spacing: 0.5px;
+    }
 
-   input[type="submit"]:hover {
-    background-color: #777171;
-    color: #ffffff;
-  }
+    input[type="submit"]:hover {
+        background-color: #777171;
+        color: #ffffff;
+    }
 
-  .inputfile-2 + label {
-    color: #6b6062;
-    border: 2px solid currentColor;
-  }
+    .inputfile-2+label {
+        color: #6b6062;
+        border: 2px solid currentColor;
+    }
 
-  .inputfile + label {
-    max-width: 80%;
-    font-weight: 700;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    cursor: pointer;
-    display: inline-block;
-    overflow: hidden;
-    padding: 0.625rem 1.25rem;
- }
+    .inputfile+label {
+        max-width: 80%;
+        font-weight: 700;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        cursor: pointer;
+        display: inline-block;
+        overflow: hidden;
+        padding: 0.625rem 1.25rem;
+    }
 
-   .inputfile + label svg {
-    width: 1em;
-    height: 1em;
-    vertical-align: middle;
-    fill: currentColor;
-    margin-top: -0.25em;
-    margin-right: 0.25em;
- }
+    .inputfile+label svg {
+        width: 1em;
+        height: 1em;
+        vertical-align: middle;
+        fill: currentColor;
+        margin-top: -0.25em;
+        margin-right: 0.25em;
+    }
 
-   .inputfile {
-    width: 0.1px;
-    height: 0.1px;
-    opacity: 0;
-    overflow: hidden;
-    position: absolute;
-    z-index: -1;
-  }
+    .inputfile {
+        width: 0.1px;
+        height: 0.1px;
+        opacity: 0;
+        overflow: hidden;
+        position: absolute;
+        z-index: -1;
+    }
 
-  .inputfile + label {
-    cursor: pointer; /* "hand" cursor */
-  }
-  .inputfile:focus + label {
-    outline: 1px dotted #000;
-    outline: -webkit-focus-ring-color auto 5px;
- }
+    .inputfile+label {
+        cursor: pointer;
+        /* "hand" cursor */
+    }
+
+    .inputfile:focus+label {
+        outline: 1px dotted #000;
+        outline: -webkit-focus-ring-color auto 5px;
+    }
     </style>
     <script src="https://code.highcharts.com/highcharts.js"></script>
     <script src="https://code.highcharts.com/modules/exporting.js"></script>
@@ -165,9 +167,11 @@
                 <fieldset>
                     <legend>Upload your CSV File</legend>
                     <div class="box">
-                    <input type="file" class="inputfile inputfile-2" name="File Upload" id="txtFileUpload" data-multiple-caption="{count} files selected" accept=".csv"/>
-                    <label for="txtFileUpload"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="17" viewBox="0 0 20 17"><path d="M10 0l-5.2 4.9h3.3v5.1h3.8v-5.1h3.3l-5.2-4.9zm9.3 11.5l-3.2-2.1h-2l3.4 2.6h-3.5c-.1 0-.2.1-.2.1l-.8 2.3h-6l-.8-2.2c-.1-.1-.1-.2-.2-.2h-3.6l3.4-2.6h-2l-3.2 2.1c-.4.3-.7 1-.6 1.5l.6 3.1c.1.5.7.9 1.2.9h16.3c.6 0 1.1-.4 1.3-.9l.6-3.1c.1-.5-.2-1.2-.7-1.5z"></path></svg> <span>Choose a file…</span></label>
-                   </div>
+                        <input type="file" class="inputfile inputfile-2" name="File Upload" id="txtFileUpload" data-multiple-caption="{count} files selected" accept=".csv" />
+                        <label for="txtFileUpload"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="17" viewBox="0 0 20 17">
+                                <path d="M10 0l-5.2 4.9h3.3v5.1h3.8v-5.1h3.3l-5.2-4.9zm9.3 11.5l-3.2-2.1h-2l3.4 2.6h-3.5c-.1 0-.2.1-.2.1l-.8 2.3h-6l-.8-2.2c-.1-.1-.1-.2-.2-.2h-3.6l3.4-2.6h-2l-3.2 2.1c-.4.3-.7 1-.6 1.5l.6 3.1c.1.5.7.9 1.2.9h16.3c.6 0 1.1-.4 1.3-.9l.6-3.1c.1-.5-.2-1.2-.7-1.5z"></path>
+                            </svg> <span>Choose a file…</span></label>
+                    </div>
                 </fieldset>
             </div>
             <input type="submit" value="Download" id="download-button" style="margin:5px">
@@ -435,16 +439,26 @@
             detailArr[i].Percentage = Math.round((piano / models) * 100);
 
             let manName = detailArr[i]["Category"].toLowerCase().split(":")[0];
-            manName = manName.split(" ").join("").split(",").join("").split(".").join("");
-            let manufactName = manName.replace("limited", "ltd").replace("private", "ltd").trim();
+            manName = manName.split(",").join("").split(".").join("").split("(").join("").split(")").join("");
+            let manustring = manName.replace("limited", "ltd").replace("private", "ltd").replace("company", "co").trim()
+            .split(" ");
+            let manufactName = manustring.join("");
 
             for (let j = 0; j < dCompare.length; j++) {
 
                 let manufacturer = dCompare[j]["Manufacturer"].toLowerCase();
-                manufacturer = manufacturer.split(" ").join("").split(",").join("").split(".").join("");
-                let compName = manufacturer.replace("limited", "ltd").replace("private", "ltd").trim();
+                manufacturer = manufacturer.split(" ").join("").split(",").join("").split(".").join("").split("(").join("").split(")").join("");
+                let compName = manufacturer.replace("limited", "ltd").replace("private", "ltd").replace("company", "co").
+                trim();
+                let count = 0;
 
-                if (manufactName == compName) {
+                for (let stringloop = 0; stringloop < manustring.length; stringloop++) {
+                    if (compName.includes(manustring[stringloop])) {
+                        count++;
+                    }
+                }
+
+                if (manufactName == compName || count == manustring.length) {
                     console.log("========================================Exact match " + i);
                     detailArr[i].Manufacturer = "Exact Match";
                     dataArr.push(detailArr[i]);
@@ -472,9 +486,9 @@
     function downloadJSON2CSV(objArray) {
         var csv = 'Category,Models,Piano Played,Manufacturer,Percentage\n';
         objArray.forEach(function(row) {
-            let values= Object.values(row);
+            let values = Object.values(row);
             console.log(values);
-            values[0]=values[0].split(",").join(" ");
+            values[0] = values[0].split(",").join(" ");
             csv += values.join(',');
             csv += "\n";
         });
@@ -484,29 +498,27 @@
         hiddenElement.target = '_blank';
         hiddenElement.download = 'fuzzy-matched-dolby-list.csv';
         hiddenElement.click();
-        
+
     }
 
-var inputs = document.querySelectorAll( '.inputfile' );
-Array.prototype.forEach.call( inputs, function( input )
-{
-    var label    = input.nextElementSibling,
-        labelVal = label.innerHTML;
+    var inputs = document.querySelectorAll('.inputfile');
+    Array.prototype.forEach.call(inputs, function(input) {
+        var label = input.nextElementSibling,
+            labelVal = label.innerHTML;
 
-    input.addEventListener( 'change', function( e )
-    {
-        var fileName = '';
-        if( this.files && this.files.length > 1 )
-            fileName = ( this.getAttribute( 'data-multiple-caption' ) || '' ).replace( '{count}', this.files.length );
-        else
-            fileName = e.target.value.split( '\\' ).pop();
+        input.addEventListener('change', function(e) {
+            var fileName = '';
+            if (this.files && this.files.length > 1)
+                fileName = (this.getAttribute('data-multiple-caption') || '').replace('{count}', this.files.length);
+            else
+                fileName = e.target.value.split('\\').pop();
 
-        if( fileName )
-            label.querySelector( 'span' ).innerHTML = fileName;
-        else
-            label.innerHTML = labelVal;
+            if (fileName)
+                label.querySelector('span').innerHTML = fileName;
+            else
+                label.innerHTML = labelVal;
+        });
     });
-});
     </script>
 </body>
 
