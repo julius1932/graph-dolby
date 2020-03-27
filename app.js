@@ -13,7 +13,7 @@ const multer = require('multer');
 const csv = require('fast-csv');
 
 const mongoose = require('mongoose');
-const passport = require('passport');
+var passport = require('passport');
 
 const dbPort = process.env.DB_PORT || 27017;
 const dbUrl = process.env.DB_URL || "localhost";
@@ -50,9 +50,13 @@ app.use((req,res,next) => {
      console.log(`Received a ${req.method} request from ${req.ip} for                ${req.url}`);
     next();
 });
-app.use('/users', require('./routes/user'));
-//registers our authentication routes with Express.
 
+
+app.use('/users', require('./routes/user'));
+
+
+//registers our authentication routes with Express.
+const Protect =passport.authenticate('jwt', {session: false});
 app.get('/', function(req, res) {
     res.sendFile(__dirname + '/graph.html');
     // res.sendFile(__dirname + '/clients.html');

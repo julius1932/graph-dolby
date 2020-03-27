@@ -13,7 +13,7 @@ const jwt = require('jsonwebtoken');
 //imports Passport and the JsonWebToken library for some utilities
 
 router.get('/register', (req, res) => {
-
+ // res.sendFile(__dirname.split("routes")[0] + 'login-las.html');
 })
 router.post('/register', (req, res) => {
     User.findOne({ emailAddress: req.body.emailAddress })
@@ -41,16 +41,23 @@ router.post('/register', (req, res) => {
             }
         });
 });
+router.get('/login', (req, res) => {
+  res.sendFile(__dirname.split("routes")[0] + 'login-las.html');
+})
 router.post('/login', (req, res) => {
   let errors={};
     const emailAddress = req.body.emailAddress;
     const password = req.body.password;
+    
     User.findOne({ emailAddress })
         .then(user => {
             if (!user) {
-                errors.email = "No Account Found";
-                return res.status(404).json(errors);
+                errors.error = "No Account Found";
+                //res.status(400).jsonp(errors);
+                return res.jsonp(errors);
             }
+            console.log("ooooooooooooooooooooooooooooooooooooooooooooooooo");
+            console.log(user);
             bcrypt.compare(password, user.password)
                 .then(isMatch => {
                     if (isMatch) {
@@ -67,12 +74,13 @@ router.post('/login', (req, res) => {
                                     });
                                 res.jsonp({
                                     success: true,
-                                    token: `Bearer ${token}`
+                                    token: `jwt ${token}`
                                 });
                             });
                     } else {
-                        errors.password = "Password is incorrect";
-                        res.status(400).jsonp(errors);
+                        errors.error = "Password is incorrect";
+                        //res.status(400).jsonp(errors);
+                        res.jsonp(errors);
                     }
                 });
         });
