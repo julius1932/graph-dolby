@@ -104,8 +104,8 @@
     }
 
     .inputfile-2+label:hover {
-     background-color: #e3e4ef;
-     color: #363538;
+        background-color: #e3e4ef;
+        color: #363538;
     }
 
     .inputfile+label {
@@ -229,7 +229,7 @@
     });
     $("#download-button").click(function() {
         event.preventDefault();
-        var qry =  $('.dist-from').serialize();
+        var qry = $('.dist-from').serialize();
         if (!qry) {
             alert("Select Manufacturers/Distributors");
             return;
@@ -433,18 +433,20 @@
             let manName = detailArr[i]["Category"].toLowerCase().split(":")[0];
             manName = manName.split(",").join("").split(".").join("").split("(").join("").split(")").join("");
             let manustring = manName.replace("limited", "ltd").replace("private", "ltd").replace("company", "co").trim()
-            .split(" ");
+                .split(" ");
             let manufactName = manustring.join("");
 
             for (let j = 0; j < dCompare.length; j++) {
 
                 let manufacturer = dCompare[j]["Manufacturer"].toLowerCase();
                 manufacturer = manufacturer.split(" ").join("").split(",").join("").split(".").join("").split("(").join("").split(")").join("");
-                let compName = manufacturer.replace("limited", "ltd").replace("private", "ltd").replace("company", "co").
-                trim();
+                let compName = manufacturer.replace("limited", "ltd").replace("private", "ltd").replace("company", "co").trim();
                 let count = 0;
+                let dName;
+                manustring[1] ? dName = manustring[0] + manustring[1] : manustring[0];
 
                 for (let stringloop = 0; stringloop < manustring.length; stringloop++) {
+
                     if (compName.includes(manustring[stringloop])) {
                         count++;
                     }
@@ -457,7 +459,7 @@
                     break;
                 }
 
-                if (manufactName.includes(compName) || compName.includes(manufactName)) {
+                if (manufactName.includes(compName) || compName.includes(manufactName) || compName.startsWith(dName)) {
                     console.log("+++++++++++++++++++++++++++++++++++++++++Near match " + i);
                     detailArr[i].Manufacturer = "Near Match";
                 }
@@ -468,7 +470,6 @@
                     }
                     dataArr.push(detailArr[i]);
                 }
-
             }
         }
 
