@@ -1,6 +1,7 @@
 const express = require("express");
 const app = express();
 const gsjson = require('google-spreadsheet-to-json');
+const cp = require('cookie-parser');
 const bodyParser = require('body-parser');
 var cron = require('node-cron');
 const jsonfile = require('jsonfile');
@@ -10,9 +11,29 @@ const path = require('path');
 
 const multer = require('multer');
 const csv = require('fast-csv');
+
+const mongoose = require('mongoose');
+const passport = require('passport');
+
+const dbPort = process.env.DB_PORT || 27017;
+const dbUrl = process.env.DB_URL || "localhost";
+const dbCollection = process.env.DB_COLLECTION || "auth-test";
+
 var MongoClient = require('mongodb').MongoClient;
 var url = 'mongodb://junta:papa12345@ds251618.mlab.com:51618/analytics';
 
+
+//sets the required variables from Environment Variables.
+mongoose.set('useCreateIndex', true);
+//fixes an issue with a depricated default in Mongoose.js
+mongoose.connect(`mongodb://${dbUrl}/${dbCollection}`, {useNewUrlParser: true})
+       .then(_ => console.log('Connected Successfully to MongoDB'))
+       .catch(err => console.error(err));
+app.use(passport.initialize());
+//initializes the passport configuration.
+require('./passport-config')(passport);
+//imports our configuration file which holds our verification callbacks and things like the secret for signing.
+app.use(cp());
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -20,6 +41,17 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 const HELPERS = require("./helpers");
 app.set('port', process.env.PORT || 3000);
+
+//custom Middleware for logging the each request going to the API
+app.use((req,res,next) => {
+      if (req.body) console.log(req.body);
+      if (req.params) console.log(req.params);
+      if(req.query) console.log(req.query);
+     console.log(`Received a ${req.method} request from ${req.ip} for                ${req.url}`);
+    next();
+});
+app.use('/users', require('./routes/user'));
+//registers our authentication routes with Express.
 
 app.get('/', function(req, res) {
     res.sendFile(__dirname + '/graph.html');
