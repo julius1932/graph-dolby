@@ -238,6 +238,7 @@
                 qry += "dists=" + encodeURI(optionText);
             }
         });
+      qry =  $('.dist-from').serialize();
         if (!qry) {
             alert("Select Manufacturers/Distributors");
             return;
