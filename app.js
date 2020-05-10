@@ -26,7 +26,8 @@ var url = 'mongodb://junta:papa12345@ds251618.mlab.com:51618/analytics';
 //sets the required variables from Environment Variables.
 mongoose.set('useCreateIndex', true);
 //fixes an issue with a depricated default in Mongoose.js
-mongoose.connect(`mongodb://${dbUrl}/${dbCollection}`, {useNewUrlParser: true})
+//mongoose.connect(`mongodb://${dbUrl}/${dbCollection}`, {useNewUrlParser: true})
+mongoose.connect(`mongodb://${url}`, {useNewUrlParser: true})
        .then(_ => console.log('Connected Successfully to MongoDB'))
        .catch(err => console.error(err));
 app.use(passport.initialize());
