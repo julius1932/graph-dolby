@@ -123,7 +123,7 @@ app.get(`/client`, function(req, res) {
     }
     if (!Array.isArray(t2)) {
         let temp = t2;
-        console.log("ooooooooooooooooooooooopppppiiiiiiiiiiiiiiiiii ", temp);
+        console.log("ooooooooooooooooooooooopppppiiiiiiiiiiiiiiiii ", temp);
 
         t2 = [temp];
     }
@@ -162,8 +162,12 @@ app.get(`/client`, function(req, res) {
                 chart: [
                     { label: 'Holiday 1 piano sound = DD', y: result.sound.holiday1 },
                     { label: 'Holiday 2 piano sound = DD+', y: result.sound.holiday2 },
-                    { label: 'Both DD and DD+:', y: result.sound.both },
-                    { label: 'No piano sound:', y: result.sound.no }
+
+                    { label: 'Holiday 3 quick check = JPEG', y: result.sound.holiday1 },
+                    { label: 'Holiday 4 piano sound = AAC', y: result.sound.holiday2 },
+
+                    { label: 'All DD , DD+ and ACC', y: result.sound.both },
+                    //{ label: 'No piano sound:', y: result.sound.no }
                 ],
 
                 t1Empty: t1Empty,
