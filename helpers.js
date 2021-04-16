@@ -532,10 +532,10 @@ const HELPERS = {
                     sound.holiday2++;
                     break;
                 case "HOLIDAY3":
-                    sound.holiday1++;
+                    sound.holiday3++;
                     break;
                 case "HOLIDAY4":
-                    sound.holiday2++;
+                    sound.holiday4++;
                     break;
                 case "ALL":
                     sound.both++;
