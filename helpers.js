@@ -537,7 +537,7 @@ const HELPERS = {
                 case "HOLIDAY4":
                     sound.holiday2++;
                     break;
-                case "BOTH":
+                case "ALL":
                     sound.both++;
                     break;
                 case "NO":
@@ -604,6 +604,9 @@ const HELPERS = {
             console.error(err);
         });*/
         let data = cleanForChart(result, dist);
+        data.country=result.map(r=>r.country);
+        data.country=data.country.filter((r,i)=>r&&i===data.country.indexOf(r));
+        data.country=data.country.join(" , ");
         return res.jsonp(data);
         /*})
         .catch(function(err) {

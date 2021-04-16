@@ -163,8 +163,8 @@ app.get(`/client`, function(req, res) {
                     { label: 'Holiday 1 piano sound = DD', y: result.sound.holiday1 },
                     { label: 'Holiday 2 piano sound = DD+', y: result.sound.holiday2 },
 
-                    { label: 'Holiday 3 quick check = JPEG', y: result.sound.holiday1 },
-                    { label: 'Holiday 4 piano sound = AAC', y: result.sound.holiday2 },
+                    { label: 'Holiday 3 quick check = JPEG', y: result.sound.holiday3 },
+                    { label: 'Holiday 4 piano sound = AAC', y: result.sound.holiday4 },
 
                     { label: 'All DD , DD+ and ACC', y: result.sound.both },
                     //{ label: 'No piano sound:', y: result.sound.no }
