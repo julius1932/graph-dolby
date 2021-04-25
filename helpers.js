@@ -83,9 +83,6 @@ const readOrderByBrand = (data, dist) => {
 const readOrderByRetailer = (data, graph) => {
     let items = {};
     console.log(data.length);
-        items.country=data.map(r=>r.country);
-        items.country=items.country.filter((r,i)=>r&&i===items.country.indexOf(r));
-        items.country=items.country.join(" , ");
     data.forEach(function(item) {
         let brandLab = "";
         let brand = item.retailerName;
@@ -571,6 +568,7 @@ const HELPERS = {
     byRetailer: (res, params) => {
         let result = jsonfile.readFileSync(`data.json`);
         console.log(result.length);
+
         if (params.retailer) {
             if (!Array.isArray(params.retailer)) {
                 params.retailer = [params.retailer];
@@ -591,6 +589,9 @@ const HELPERS = {
             bars = params.bars;
         }
         let data = cleanForChartRetailer(result, graph, bars);
+        data.country=result.map(r=>r.country);
+        data.country=data.country.filter((r,i)=>r&&i===data.country.indexOf(r));
+        data.country=data.country.join(" , ");
         console.log(data);
         return res.jsonp(data);
     },
