@@ -83,7 +83,9 @@ const readOrderByBrand = (data, dist) => {
 const readOrderByRetailer = (data, graph) => {
     let items = {};
     console.log(data.length);
-
+        items.country=data.map(r=>r.country);
+        items.country=items.country.filter((r,i)=>r&&i===items.country.indexOf(r));
+        items.country=items.country.join(" , ");
     data.forEach(function(item) {
         let brandLab = "";
         let brand = item.retailerName;
@@ -122,6 +124,7 @@ const readOrderByRetailer = (data, graph) => {
             }
         }
     });
+    
     //console.log(items);
     return items;
 }
