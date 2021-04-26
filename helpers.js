@@ -519,7 +519,7 @@ const HELPERS = {
             holiday3: 0,
             holiday4: 0,
             both: 0,
-           // no: 0
+            no: 0
         }
         data.forEach((item) => {
             let soP = clean(item.pianoSound);
@@ -542,7 +542,7 @@ const HELPERS = {
                     break;
                 case "NO":
                 case "":
-                   // sound.no++;
+                    sound.no++;
 
                     break;
             }
