@@ -52,7 +52,7 @@ app.use((req,res,next) => {
     next();
 });
 
-
+ 
 app.use('/users', require('./routes/user'));
 
 
@@ -167,7 +167,7 @@ app.get(`/client`, function(req, res) {
                     { label: 'Holiday 4 piano sound = AAC', y: result.sound.holiday4 },
 
                     { label: 'All = DD , DD+ and ACC', y: result.sound.both },
-                    //{ label: 'No piano sound:', y: result.sound.no }
+                    { label: 'No piano sound:', y: result.sound.no }
                 ],
 
                 t1Empty: t1Empty,
