@@ -5,6 +5,7 @@ const insertADs = (tagId, AdArrayObject) => {
             src: "ad.png",
         },
     ];
+	tagId="p2"
     const $elemA = $("<a/>", { href: AdArrayObject[0].url, tagert: "_blank" });
 
     const $elemImg = $("<img/>", { src: AdArrayObject[0].src });
