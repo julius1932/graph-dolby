@@ -8,7 +8,7 @@ const insertADs = (tagId, adObj) => {
     const $elemA = $("<a/>", { href: adObj.url || "", tagert: "_blank" });
 
     const $elemImg = $("<img/>", {
-        src: (src = adObj.photoUrl),
+        src: (src = adObj.photoUrl || ""),
     });
     $elemImg.css({ width: 250, hieght: 250, display: "block" });
     $elemA.prepend($elemImg);
@@ -24,8 +24,8 @@ const fetchAd = async (url, tagId) => {
             data: {},
             dataType: "json",
             success: function (data) {
-                console.log("Data: ", data);
-                insertADs(tagId, data);
+                console.log("Data: ");
+                insertADs(tagId, data.data || {});
             },
             error: function (request, error) {
                 console.log("Request: " + JSON.stringify(request));
