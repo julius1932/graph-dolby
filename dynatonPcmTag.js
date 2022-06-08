@@ -1,16 +1,12 @@
 const insertADs = (tagId, adObj) => {
-    AdArrayObject = [
-        {
-            url: "http://www.yourdomain.com/yourad.html",
-            src: "ad.png",
-        },
-    ];
+    
+    tagId=`dynaton-adslot-id-${adSlot._id}`;
     const $elemA = $("<a/>", { href: adObj.url || "", tagert: "_blank" });
 
     const $elemImg = $("<img/>", {
-        src: (src = adObj.photoUrl || ""),
+        src: (src = adObj.photoUrl[0] || ""),
     });
-    $elemImg.css({ width: 250, hieght: 250, display: "block" });
+    $elemImg.css({ width: adObj.adSlot.width, height: adObj.adSlot.height, display: "block" });
     $elemA.prepend($elemImg);
     setTimeout(function () {
         $(`#${tagId}`).append($elemA);
